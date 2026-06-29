@@ -1,0 +1,25 @@
+package com.boro.domain.member.service.command;
+
+import com.boro.domain.member.dto.request.MemberRequestDTO;
+import com.boro.domain.member.entity.Member;
+import com.boro.domain.member.repository.MemberRepository;
+import com.boro.global.error.code.status.MemberErrorCode;
+import com.boro.global.error.exception.handler.MemberException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class MemberCommandService {
+
+    private final MemberRepository memberRepository;
+
+    public void changeMemberInfo(Long memberId, MemberRequestDTO.ChangeMemberInfo request){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+    }
+
+}
