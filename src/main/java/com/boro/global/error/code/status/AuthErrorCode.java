@@ -15,6 +15,7 @@ public enum AuthErrorCode implements BaseErrorCode {
     MALFORMED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_401_4","손상된 Access Token입니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_401_5", "유효하지 않은 Token입니다."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_401_6", "만료된 Token입니다."),
+    AUTHENTICATION_REQUIRED(HttpStatus.UNAUTHORIZED, "AUTH401_7", "인증이 필요합니다."),
     ;
 
     private final HttpStatus httpStatus;

@@ -5,7 +5,6 @@ import com.boro.domain.auth.dto.response.AuthResponseDTO;
 import com.boro.domain.auth.dto.response.OAuth2ResponseDTO;
 import com.boro.domain.auth.service.command.AuthCommandService;
 import com.boro.global.error.ApiResponse;
-import com.boro.global.security.domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,12 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequiredArgsConstructor

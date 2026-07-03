@@ -2,10 +2,10 @@ package com.boro.global.security;
 
 
 import com.boro.domain.auth.service.query.RedisStorageQueryService;
-import com.boro.domain.member.service.query.MemberQueryService;
 import com.boro.global.data.CorsConfigData;
 import com.boro.global.security.filter.AuthenticationEntryPointImpl;
 import com.boro.global.security.filter.JwtFilter;
+import com.boro.global.security.service.CustomUserDetailsService;
 import com.boro.global.security.util.JwtUtil;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +29,13 @@ public class SecurityConfig {
     private static final String API_PREFIX = "/api/v1";
     private final CorsConfigData corsConfigData;
     private final JwtUtil jwtUtil;
-    private final MemberQueryService memberQueryService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final RedisStorageQueryService redisStorageQueryService;
 
     private String[] allowUrl = {
             API_PREFIX + "/auth/**",
+            "/ws-connect", "/ws-connect/**",
+            "/ws-chat", "/ws-chat/**",
 
             "/swagger-ui/**",
             "/swagger-resources/**",
@@ -81,7 +83,7 @@ public class SecurityConfig {
 
     @Bean
     Filter jwtFilter() {
-        return new JwtFilter(jwtUtil, memberQueryService, redisStorageQueryService);
+        return new JwtFilter(jwtUtil, customUserDetailsService, redisStorageQueryService);
     }
 
     @Bean
