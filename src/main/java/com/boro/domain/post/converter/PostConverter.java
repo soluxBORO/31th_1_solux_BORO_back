@@ -68,4 +68,21 @@ public class PostConverter {
                 .authorNickname(post.getMember().getNickname())
                 .build();
     }
+
+    public static PostResponseDTO.PostDetail toPostDetail(Post post) {
+        Item item = post.getItem();
+        return PostResponseDTO.PostDetail.builder()
+                .postId(post.getId())
+                .status(post.getStatus())
+                .imageUrlList(item.getItemImages().stream().map(ItemImage::getImageUrl).toList())
+                .category(item.getCategory())
+                .title(item.getTitle())
+                .description(item.getDescription())
+                .rentalStartTime(item.getRentalStartTime())
+                .rentalEndTime(item.getRentalEndTime())
+                .rentalPrice(item.getRentalPrice())
+                .rentalPriceUnit(item.getRentalPriceUnit())
+                .authorNickname(post.getMember().getNickname())
+                .build();
+    }
 }

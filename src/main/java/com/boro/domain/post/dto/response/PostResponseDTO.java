@@ -29,4 +29,19 @@ public record PostResponseDTO() {
             RentalPriceUnit rentalPriceUnit,
             String authorNickname
     ) {}
+
+    @Builder
+    public record PostDetail(
+            Long postId,
+            PostStatus status,
+            List<String> imageUrlList,
+            ItemCategory category,
+            String title,
+            String description,
+            LocalDate rentalStartTime,
+            LocalDate rentalEndTime,
+            Integer rentalPrice,
+            RentalPriceUnit rentalPriceUnit,
+            String authorNickname
+    ) {}
 }

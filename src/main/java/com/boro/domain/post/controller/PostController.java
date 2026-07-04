@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +60,13 @@ public class PostController {
             @RequestParam(defaultValue = "false") boolean onlyAvailable
     ) {
         List<PostResponseDTO.PostSummary> response = postQueryService.getPostList(category, onlyAvailable);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "물품 게시글 상세 조회 API", description = "물품 대여 게시글의 상세 정보를 조회하는 API")
+    @GetMapping("/{postId}")
+    public ApiResponse<PostResponseDTO.PostDetail> getPostDetail(@PathVariable Long postId) {
+        PostResponseDTO.PostDetail response = postQueryService.getPostDetail(postId);
         return ApiResponse.onSuccess(response);
     }
 }
