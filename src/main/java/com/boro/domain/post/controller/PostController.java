@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,5 +69,15 @@ public class PostController {
     public ApiResponse<PostResponseDTO.PostDetail> getPostDetail(@PathVariable Long postId) {
         PostResponseDTO.PostDetail response = postQueryService.getPostDetail(postId);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "물품 게시글 삭제 API", description = "물품 대여 게시글을 삭제하는 API")
+    @DeleteMapping("/{postId}")
+    public ApiResponse<Void> deletePost(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long postId
+    ) {
+        postCommandService.deletePost(customUserDetails.getMemberId(), postId);
+        return ApiResponse.onSuccess(null);
     }
 }

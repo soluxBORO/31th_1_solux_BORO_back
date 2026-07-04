@@ -54,4 +54,15 @@ public class PostCommandService {
 
         PostConverter.updateItem(post.getItem(), request);
     }
+
+    public void deletePost(Long memberId, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new PostException(PostErrorCode.NOT_POST_OWNER);
+        }
+
+        post.markAsDeleted();
+    }
 }

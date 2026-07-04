@@ -34,4 +34,8 @@ public class Post extends BaseEntity {
         this.item = item;
         item.setPost(this);
     }
+
+    public void markAsDeleted() {
+        this.status = PostStatus.DELETED;
+    }
 }
