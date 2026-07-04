@@ -1,12 +1,9 @@
 package com.boro.domain.post.entity.enums;
 
 public enum ItemCategory {
+    DEPARTMENT_JACKET,
+    MAJOR_BOOKS,
     ELECTRONICS,
-    BOOKS_STATIONERY,
-    CLOTHING,
-    SPORTS_LEISURE,
-    LIVING,
-    BEAUTY,
-    KITCHEN,
+    LIVING_SUPPLIES,
     ETC
 }

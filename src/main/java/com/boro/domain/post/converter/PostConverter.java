@@ -49,4 +49,20 @@ public class PostConverter {
         );
         item.updateImages(request.imageUrlList());
     }
+
+    public static PostResponseDTO.PostSummary toPostSummary(Post post) {
+        Item item = post.getItem();
+        return PostResponseDTO.PostSummary.builder()
+                .postId(post.getId())
+                .status(post.getStatus())
+                .imageUrlList(item.getItemImages().stream().map(ItemImage::getImageUrl).toList())
+                .category(item.getCategory())
+                .title(item.getTitle())
+                .description(item.getDescription())
+                .rentalStartTime(item.getRentalStartTime())
+                .rentalEndTime(item.getRentalEndTime())
+                .rentalPrice(item.getRentalPrice())
+                .authorNickname(post.getMember().getNickname())
+                .build();
+    }
 }

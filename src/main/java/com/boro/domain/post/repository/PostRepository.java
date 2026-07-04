@@ -1,7 +1,23 @@
 package com.boro.domain.post.repository;
 
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.ItemCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+    @Query("""
+            SELECT p FROM Post p
+            JOIN FETCH p.item i
+            JOIN FETCH p.member m
+            WHERE p.status <> com.boro.domain.post.entity.enums.PostStatus.DELETED
+              AND (:category IS NULL OR i.category = :category)
+              AND (:onlyAvailable = false OR p.status = com.boro.domain.post.entity.enums.PostStatus.ACTIVE)
+            ORDER BY p.createdAt DESC
+            """)
+    List<Post> findPostList(@Param("category") ItemCategory category, @Param("onlyAvailable") boolean onlyAvailable);
 }

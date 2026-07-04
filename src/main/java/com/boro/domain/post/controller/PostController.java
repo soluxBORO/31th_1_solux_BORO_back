@@ -2,7 +2,9 @@ package com.boro.domain.post.controller;
 
 import com.boro.domain.post.dto.request.PostRequestDTO;
 import com.boro.domain.post.dto.response.PostResponseDTO;
+import com.boro.domain.post.entity.enums.ItemCategory;
 import com.boro.domain.post.service.command.PostCommandService;
+import com.boro.domain.post.service.query.PostQueryService;
 import com.boro.global.error.ApiResponse;
 import com.boro.global.security.domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,12 +12,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequestMapping("/api/v1/post")
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
     private final PostCommandService postCommandService;
+    private final PostQueryService postQueryService;
 
     @Operation(summary = "물품 게시글 작성 API", description = "물품 대여 게시글을 작성하는 API")
     @PostMapping
@@ -44,5 +50,15 @@ public class PostController {
     ) {
         postCommandService.updatePost(customUserDetails.getMemberId(), postId, request);
         return ApiResponse.onSuccess(null);
+    }
+
+    @Operation(summary = "물품 게시글 리스트 조회 API", description = "전체 물품 대여 게시글을 카드형 리스트로 조회하는 API")
+    @GetMapping
+    public ApiResponse<List<PostResponseDTO.PostSummary>> getPostList(
+            @RequestParam(required = false) ItemCategory category,
+            @RequestParam(defaultValue = "false") boolean onlyAvailable
+    ) {
+        List<PostResponseDTO.PostSummary> response = postQueryService.getPostList(category, onlyAvailable);
+        return ApiResponse.onSuccess(response);
     }
 }
