@@ -1,6 +1,7 @@
 package com.boro.domain.post.entity;
 
 import com.boro.domain.post.entity.enums.ItemCategory;
+import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,9 @@ public class Item extends BaseEntity {
 
     private Integer rentalPrice;
 
+    @Enumerated(EnumType.STRING)
+    private RentalPriceUnit rentalPriceUnit;
+
     @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false, unique = true)
@@ -51,13 +55,15 @@ public class Item extends BaseEntity {
     }
 
     public void updateInfo(ItemCategory category, String title, String description,
-                            LocalDate rentalStartTime, LocalDate rentalEndTime, Integer rentalPrice) {
+                            LocalDate rentalStartTime, LocalDate rentalEndTime,
+                            Integer rentalPrice, RentalPriceUnit rentalPriceUnit) {
         this.category = category;
         this.title = title;
         this.description = description;
         this.rentalStartTime = rentalStartTime;
         this.rentalEndTime = rentalEndTime;
         this.rentalPrice = rentalPrice;
+        this.rentalPriceUnit = rentalPriceUnit;
     }
 
     public void updateImages(List<String> imageUrlList) {

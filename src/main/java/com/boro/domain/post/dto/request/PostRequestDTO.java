@@ -1,6 +1,7 @@
 package com.boro.domain.post.dto.request;
 
 import com.boro.domain.post.entity.enums.ItemCategory;
+import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -38,7 +39,10 @@ public record PostRequestDTO() {
             @NotNull(message = "대여 비용을 입력해야 합니다.")
             @Min(value = 0, message = "대여 비용은 0원 이상이어야 합니다.")
             @Max(value = 5000, message = "대여 비용은 최대 5,000원까지 입력할 수 있습니다.")
-            Integer rentalPrice
+            Integer rentalPrice,
+
+            @NotNull(message = "대여 비용 단위를 선택해야 합니다.")
+            RentalPriceUnit rentalPriceUnit
     ) {}
 
     public record EditPost(
@@ -66,6 +70,9 @@ public record PostRequestDTO() {
             @NotNull(message = "대여 비용을 입력해야 합니다.")
             @Min(value = 0, message = "대여 비용은 0원 이상이어야 합니다.")
             @Max(value = 5000, message = "대여 비용은 최대 5,000원까지 입력할 수 있습니다.")
-            Integer rentalPrice
+            Integer rentalPrice,
+
+            @NotNull(message = "대여 비용 단위를 선택해야 합니다.")
+            RentalPriceUnit rentalPriceUnit
     ) {}
 }

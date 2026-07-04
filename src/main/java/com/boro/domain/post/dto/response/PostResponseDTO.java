@@ -2,6 +2,7 @@ package com.boro.domain.post.dto.response;
 
 import com.boro.domain.post.entity.enums.ItemCategory;
 import com.boro.domain.post.entity.enums.PostStatus;
+import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public record PostResponseDTO() {
             LocalDate rentalStartTime,
             LocalDate rentalEndTime,
             Integer rentalPrice,
+            RentalPriceUnit rentalPriceUnit,
             String authorNickname
     ) {}
 }

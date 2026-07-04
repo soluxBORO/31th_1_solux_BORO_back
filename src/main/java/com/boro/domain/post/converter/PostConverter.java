@@ -23,6 +23,7 @@ public class PostConverter {
                 .rentalStartTime(request.rentalStartTime())
                 .rentalEndTime(request.rentalEndTime())
                 .rentalPrice(request.rentalPrice())
+                .rentalPriceUnit(request.rentalPriceUnit())
                 .build();
 
         request.imageUrlList().forEach(imageUrl ->
@@ -45,7 +46,8 @@ public class PostConverter {
                 request.description(),
                 request.rentalStartTime(),
                 request.rentalEndTime(),
-                request.rentalPrice()
+                request.rentalPrice(),
+                request.rentalPriceUnit()
         );
         item.updateImages(request.imageUrlList());
     }
@@ -62,6 +64,7 @@ public class PostConverter {
                 .rentalStartTime(item.getRentalStartTime())
                 .rentalEndTime(item.getRentalEndTime())
                 .rentalPrice(item.getRentalPrice())
+                .rentalPriceUnit(item.getRentalPriceUnit())
                 .authorNickname(post.getMember().getNickname())
                 .build();
     }
