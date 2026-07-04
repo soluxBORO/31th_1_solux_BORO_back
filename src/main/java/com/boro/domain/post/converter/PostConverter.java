@@ -37,4 +37,16 @@ public class PostConverter {
                 .postId(post.getId())
                 .build();
     }
+
+    public static void updateItem(Item item, PostRequestDTO.EditPost request) {
+        item.updateInfo(
+                request.category(),
+                request.title(),
+                request.description(),
+                request.rentalStartTime(),
+                request.rentalEndTime(),
+                request.rentalPrice()
+        );
+        item.updateImages(request.imageUrlList());
+    }
 }

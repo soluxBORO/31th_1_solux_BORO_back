@@ -10,9 +10,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/post")
@@ -31,5 +33,16 @@ public class PostController {
     ) {
         PostResponseDTO.CreatePost response = postCommandService.createPost(customUserDetails.getMemberId(), request);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "물품 게시글 수정 API", description = "물품 대여 게시글을 수정하는 API")
+    @PatchMapping
+    public ApiResponse<Void> updatePost(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam Long postId,
+            @RequestBody @Valid PostRequestDTO.EditPost request
+    ) {
+        postCommandService.updatePost(customUserDetails.getMemberId(), postId, request);
+        return ApiResponse.onSuccess(null);
     }
 }

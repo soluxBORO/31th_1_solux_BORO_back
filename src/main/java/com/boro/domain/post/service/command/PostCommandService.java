@@ -39,4 +39,19 @@ public class PostCommandService {
         Post savedPost = postRepository.save(post);
         return PostConverter.toCreatePost(savedPost);
     }
+
+    public void updatePost(Long memberId, Long postId, PostRequestDTO.EditPost request) {
+        if (request.rentalEndTime().isBefore(request.rentalStartTime())) {
+            throw new PostException(PostErrorCode.INVALID_RENTAL_PERIOD);
+        }
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new PostException(PostErrorCode.NOT_POST_OWNER);
+        }
+
+        PostConverter.updateItem(post.getItem(), request);
+    }
 }

@@ -49,4 +49,19 @@ public class Item extends BaseEntity {
         itemImages.add(itemImage);
         itemImage.setItem(this);
     }
+
+    public void updateInfo(ItemCategory category, String title, String description,
+                            LocalDate rentalStartTime, LocalDate rentalEndTime, Integer rentalPrice) {
+        this.category = category;
+        this.title = title;
+        this.description = description;
+        this.rentalStartTime = rentalStartTime;
+        this.rentalEndTime = rentalEndTime;
+        this.rentalPrice = rentalPrice;
+    }
+
+    public void updateImages(List<String> imageUrlList) {
+        itemImages.clear();
+        imageUrlList.forEach(imageUrl -> addImage(ItemImage.builder().imageUrl(imageUrl).build()));
+    }
 }
