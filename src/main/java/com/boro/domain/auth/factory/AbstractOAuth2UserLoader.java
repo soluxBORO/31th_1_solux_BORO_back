@@ -33,6 +33,7 @@ public abstract class AbstractOAuth2UserLoader implements OAuth2UserLoader {
             return getUserInfo(token);
         }
         catch (Exception e) {
+            log.error("Google OAuth failed", e);
             throw new OAuthException(OAuthErrorCode.FAIL_TO_GET_USER_INFO);
         }
     }
