@@ -31,6 +31,7 @@ public class RentalRequestCommandService {
 
         if (request.decision() == RentalRequestRequestDTO.Decision.APPROVE) {
             rentalRequest.approve();
+            rentalRequest.getPost().markAsRented();
             rejectOtherPendingRequests(rentalRequest);
         } else {
             rentalRequest.reject();
