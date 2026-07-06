@@ -44,4 +44,8 @@ public class RentalRequest extends BaseEntity {
     public void reject() {
         this.requestStatus = RentalRequestStatus.REJECTED;
     }
+
+    public void complete() {
+        this.progressStatus = RentalProgressStatus.RETURNED;
+    }
 }

@@ -42,4 +42,8 @@ public class Post extends BaseEntity {
     public void markAsRented() {
         this.status = PostStatus.RENTED;
     }
+
+    public void reopen() {
+        this.status = PostStatus.ACTIVE;
+    }
 }

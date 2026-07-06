@@ -2,6 +2,7 @@ package com.boro.domain.rentalrequest.service.command;
 
 import com.boro.domain.rentalrequest.dto.request.RentalRequestRequestDTO;
 import com.boro.domain.rentalrequest.entity.RentalRequest;
+import com.boro.domain.rentalrequest.entity.enums.RentalProgressStatus;
 import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
 import com.boro.domain.rentalrequest.repository.RentalRequestRepository;
 import com.boro.global.error.code.status.RentalRequestErrorCode;
@@ -36,6 +37,23 @@ public class RentalRequestCommandService {
         } else {
             rentalRequest.reject();
         }
+    }
+
+    public void completeReturn(Long memberId, RentalRequestRequestDTO.Complete request) {
+        RentalRequest rentalRequest = rentalRequestRepository.findById(request.rentalRequestId())
+                .orElseThrow(() -> new RentalRequestException(RentalRequestErrorCode.RENTAL_REQUEST_NOT_FOUND));
+
+        if (!rentalRequest.getPost().getMember().getId().equals(memberId)) {
+            throw new RentalRequestException(RentalRequestErrorCode.NOT_REQUEST_OWNER);
+        }
+
+        if (rentalRequest.getRequestStatus() != RentalRequestStatus.APPROVED
+                || rentalRequest.getProgressStatus() != RentalProgressStatus.RENTING) {
+            throw new RentalRequestException(RentalRequestErrorCode.NOT_RENTING);
+        }
+
+        rentalRequest.complete();
+        rentalRequest.getPost().reopen();
     }
 
     private void rejectOtherPendingRequests(RentalRequest approvedRequest) {
