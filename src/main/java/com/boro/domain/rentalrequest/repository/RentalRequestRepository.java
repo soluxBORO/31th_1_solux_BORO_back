@@ -1,6 +1,7 @@
 package com.boro.domain.rentalrequest.repository;
 
 import com.boro.domain.rentalrequest.entity.RentalRequest;
+import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,6 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
             ORDER BY rr.createdAt DESC
             """)
     List<RentalRequest> findLentRequests(@Param("memberId") Long memberId);
+
+    List<RentalRequest> findByPostIdAndRequestStatus(Long postId, RentalRequestStatus requestStatus);
 }

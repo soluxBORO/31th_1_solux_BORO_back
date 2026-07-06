@@ -35,4 +35,13 @@ public class RentalRequest extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    public void approve() {
+        this.requestStatus = RentalRequestStatus.APPROVED;
+        this.progressStatus = RentalProgressStatus.RENTING;
+    }
+
+    public void reject() {
+        this.requestStatus = RentalRequestStatus.REJECTED;
+    }
 }
