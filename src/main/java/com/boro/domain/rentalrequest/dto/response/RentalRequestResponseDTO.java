@@ -17,4 +17,13 @@ public record RentalRequestResponseDTO() {
             String lender,
             String title
     ) {}
+
+    @Builder
+    public record LentItem(
+            DisplayStatus requestStatus,
+            LocalDate rentalStartTime,
+            LocalDate rentalEndTime,
+            String borrower,
+            String title
+    ) {}
 }

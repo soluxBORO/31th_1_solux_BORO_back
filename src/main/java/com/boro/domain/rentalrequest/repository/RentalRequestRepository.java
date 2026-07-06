@@ -18,4 +18,14 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
             ORDER BY rr.createdAt DESC
             """)
     List<RentalRequest> findBorrowedRequests(@Param("memberId") Long memberId);
+
+    @Query("""
+            SELECT rr FROM RentalRequest rr
+            JOIN FETCH rr.post p
+            JOIN FETCH p.item i
+            JOIN FETCH rr.member borrower
+            WHERE p.member.id = :memberId
+            ORDER BY rr.createdAt DESC
+            """)
+    List<RentalRequest> findLentRequests(@Param("memberId") Long memberId);
 }

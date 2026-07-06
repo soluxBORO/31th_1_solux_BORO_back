@@ -18,6 +18,17 @@ public class RentalRequestConverter {
                 .build();
     }
 
+    public static RentalRequestResponseDTO.LentItem toLentItem(RentalRequest rentalRequest) {
+        Item item = rentalRequest.getPost().getItem();
+        return RentalRequestResponseDTO.LentItem.builder()
+                .requestStatus(toDisplayStatus(rentalRequest))
+                .rentalStartTime(item.getRentalStartTime())
+                .rentalEndTime(item.getRentalEndTime())
+                .borrower(rentalRequest.getMember().getNickname())
+                .title(item.getTitle())
+                .build();
+    }
+
     private static RentalRequestResponseDTO.DisplayStatus toDisplayStatus(RentalRequest rentalRequest) {
         if (rentalRequest.getRequestStatus() == RentalRequestStatus.REJECTED) {
             return RentalRequestResponseDTO.DisplayStatus.REJECTED;

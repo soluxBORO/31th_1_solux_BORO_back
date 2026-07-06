@@ -21,4 +21,10 @@ public class RentalRequestQueryService {
                 .map(RentalRequestConverter::toBorrowedItem)
                 .toList();
     }
+
+    public List<RentalRequestResponseDTO.LentItem> getLentList(Long memberId) {
+        return rentalRequestRepository.findLentRequests(memberId).stream()
+                .map(RentalRequestConverter::toLentItem)
+                .toList();
+    }
 }

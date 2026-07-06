@@ -31,4 +31,14 @@ public class RentalRequestController {
                 rentalRequestQueryService.getBorrowedList(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(response);
     }
+
+    @Operation(summary = "빌려준 물품 대여 현황 조회 API", description = "내가 빌려준 물품들의 대여 현황을 조회하는 API")
+    @GetMapping("/lent")
+    public ApiResponse<List<RentalRequestResponseDTO.LentItem>> getLentList(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        List<RentalRequestResponseDTO.LentItem> response =
+                rentalRequestQueryService.getLentList(customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(response);
+    }
 }
