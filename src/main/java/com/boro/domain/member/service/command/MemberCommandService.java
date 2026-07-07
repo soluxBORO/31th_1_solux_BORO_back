@@ -2,6 +2,7 @@ package com.boro.domain.member.service.command;
 
 import com.boro.domain.member.dto.request.MemberRequestDTO;
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.global.error.code.status.MemberErrorCode;
 import com.boro.global.error.exception.handler.MemberException;
@@ -21,6 +22,13 @@ public class MemberCommandService {
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         member.changeMemberInfo(request);
+    }
+
+    public void applyPoint(Long memberId, PointReason reason) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        member.applyPoint(reason.getPoint());
     }
 
 }

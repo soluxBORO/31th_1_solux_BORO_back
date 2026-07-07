@@ -43,6 +43,10 @@ public class Member extends BaseEntity {
         this.nickname = request.nickname();
     }
 
+    public void applyPoint(int point) {
+        this.point += point;
+    }
+
     public void addSocial(Social social){
         socialList.add(social);
         social.setMember(this);
