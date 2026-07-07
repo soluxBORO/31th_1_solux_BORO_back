@@ -38,4 +38,12 @@ public class Post extends BaseEntity {
     public void markAsDeleted() {
         this.status = PostStatus.DELETED;
     }
+
+    public void markAsRented() {
+        this.status = PostStatus.RENTED;
+    }
+
+    public void reopen() {
+        this.status = PostStatus.ACTIVE;
+    }
 }
