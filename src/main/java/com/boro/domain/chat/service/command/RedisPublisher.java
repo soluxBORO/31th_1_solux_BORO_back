@@ -4,20 +4,18 @@ import com.boro.domain.chat.dto.response.ChatResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class RedisPublisher {
-    private final ChannelTopic channelTopic;
     private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      *  해당 Topic을 구독하는 모든 구독자에게 message가 발행
      */
     public void publish(ChatResponseDTO.ChatMessage message) {
-        redisTemplate.convertAndSend(channelTopic.getTopic(), message);
+        redisTemplate.convertAndSend("chat.room." + message.roomId(), message);
     }
 }
