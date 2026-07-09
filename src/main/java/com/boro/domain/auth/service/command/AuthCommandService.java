@@ -29,8 +29,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Slf4j
@@ -88,7 +86,6 @@ public class AuthCommandService {
         eventPublisher.publishEvent(
                 new MemberRequestDTO.PointGrantEvent(member.getId(), PointReason.SIGNUP)
         );
-        log.info("포인트 이벤트 발행 완료!");
         return loginToken;
     }
 

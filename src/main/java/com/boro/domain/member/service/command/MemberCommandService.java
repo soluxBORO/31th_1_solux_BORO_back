@@ -9,9 +9,11 @@ import com.boro.domain.member.repository.MemberRepository;
 import com.boro.global.error.code.status.MemberErrorCode;
 import com.boro.global.error.exception.handler.MemberException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class MemberCommandService {
         member.applyPoint(reason.getPoint());
         PointHistory pointHistory = MemberConverter.toPointHistory(reason);
         member.addPointHistory(pointHistory);
+        log.info("포인트 이벤트 발행 완료!");
     }
 
 }

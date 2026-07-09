@@ -1,6 +1,5 @@
 package com.boro.domain.rentalrequest.entity;
 
-import com.boro.domain.chat.entity.enums.ChatRoomType;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import com.boro.global.common.BaseEntity;
@@ -25,12 +24,14 @@ public class Review extends BaseEntity {
 
     private String content;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "writer_id")
+    private Member writer;
 
-    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id")
+    private Member receiver;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rental_request_id")
     private RentalRequest rentalRequest;

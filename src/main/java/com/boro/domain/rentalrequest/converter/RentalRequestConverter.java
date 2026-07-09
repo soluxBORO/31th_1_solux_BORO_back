@@ -52,11 +52,12 @@ public class RentalRequestConverter {
                 .build();
     }
 
-    public static Review toReview(Member member, RentalRequest rentalRequest, RentalRequestRequestDTO.Review request){
+    public static Review toReview(Member writer, Member receiver, RentalRequest rentalRequest, RentalRequestRequestDTO.Review request){
         return Review.builder()
                 .reviewSentiment(request.reviewSentiment())
                 .content(request.content())
-                .member(member)
+                .receiver(receiver)
+                .writer(writer)
                 .rentalRequest(rentalRequest)
                 .build();
 
