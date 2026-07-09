@@ -1,6 +1,8 @@
 package com.boro.domain.rentalrequest.converter;
 
+import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Item;
+import com.boro.domain.post.entity.Post;
 import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
 import com.boro.domain.rentalrequest.entity.RentalRequest;
 import com.boro.domain.rentalrequest.entity.enums.RentalProgressStatus;
@@ -39,5 +41,12 @@ public class RentalRequestConverter {
         return rentalRequest.getProgressStatus() == RentalProgressStatus.RETURNED
                 ? RentalRequestResponseDTO.DisplayStatus.RETURNED
                 : RentalRequestResponseDTO.DisplayStatus.RENTING;
+    }
+
+    public static RentalRequest toRentalRequest(Member member, Post post){
+        return RentalRequest.builder()
+                .member(member)
+                .post(post)
+                .build();
     }
 }

@@ -8,14 +8,19 @@ import java.util.List;
 public class ChatRequestDTO {
 
     public record ChatMessage(
-            Long roomId,
             ChatMessageType chatMessageType,
             String content,
             List<String> imageUrls
     ){}
 
     public record ChatRoom(
+            Long postId,
+            ChatRoomType chatRoomType
+    ){}
+
+    public record ChatRoomTest(
             Long ownerId,
+            Long postId,
             String chatRoomName,
             ChatRoomType chatRoomType
     ){}

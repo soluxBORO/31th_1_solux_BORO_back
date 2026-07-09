@@ -36,20 +36,21 @@ public class ChatResponseDTO {
             List<ChatMessageDetail> chatMessageList
     ){}
 
-    @Builder
-    public record ChatRoomPreview(
-            Long chatRoomId,
-            String chatName,
-            String profileUrl,
-            String lastMessageContent,
-            LocalDateTime lastMessageAt
-    ){}
-    
+//    @Builder
+//    public record ChatRoomPreview(
+//            Long chatRoomId,
+//            String chatName,
+//            String profileUrl,
+//            String lastMessageContent,
+//            LocalDateTime lastMessageAt,
+//            Integer unreadCount
+//    ){}
+
     // 채팅방 리스트 조회
     @Builder
     public record ChatRoomList(
         ChatRoomType chatRoomType,
-        List<ChatRoomPreview> chatRoomList
+        List<com.boro.domain.chat.dto.response.ChatRoomPreview> chatRoomList
     ){}
 
 }

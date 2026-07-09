@@ -22,6 +22,8 @@ public class ChatMember extends BaseEntity {
 
     private LocalDateTime lastReadAt;
 
+    private Integer unreadCount;
+
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

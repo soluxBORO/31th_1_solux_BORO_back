@@ -28,7 +28,17 @@ public class ChatController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody ChatRequestDTO.ChatRoom request
     ){
-        chatCommandService.saveChatRoom(customUserDetails.getMemberId(), request.ownerId(), request);
+        chatCommandService.saveChatRoom(customUserDetails.getMemberId(), request);
+        return ApiResponse.onSuccess(null);
+    }
+
+    @Operation(summary = "채팅 테스트 - 채팅방 생성 API", description = "채팅 테스트를 위한 API")
+    @PostMapping("/health")
+    public ApiResponse<Void> createChatRoomTest(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody ChatRequestDTO.ChatRoomTest request
+    ){
+        chatCommandService.saveChatRoomTest(customUserDetails.getMemberId(), request);
         return ApiResponse.onSuccess(null);
     }
 
@@ -48,7 +58,7 @@ public class ChatController {
             @PathVariable Long chatRoomId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ){
-        ChatResponseDTO.ChatMessageList chatRoomDetail = chatQueryService.getChatRoomDetail(chatRoomId, customUserDetails.getMemberId());
+        ChatResponseDTO.ChatMessageList chatRoomDetail = chatQueryService.getChatRoomDetail(customUserDetails.getMemberId(), chatRoomId);
         return ApiResponse.onSuccess(chatRoomDetail);
     }
 

@@ -2,6 +2,8 @@ package com.boro.domain.chat.service.query;
 
 import com.boro.domain.chat.converter.ChatConverter;
 import com.boro.domain.chat.dto.response.ChatResponseDTO;
+import com.boro.domain.chat.dto.response.ChatRoomPreview;
+import com.boro.domain.chat.entity.ChatMember;
 import com.boro.domain.chat.entity.ChatMessage;
 import com.boro.domain.chat.entity.ChatRoom;
 import com.boro.domain.chat.entity.enums.ChatRoomType;
@@ -34,8 +36,8 @@ public class ChatQueryService {
     public ChatResponseDTO.ChatRoomList getChatRoomList(Long memberId, ChatRoomType chatRoomType){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByMemberIdAndChatRoomType(member.getId(), chatRoomType);
-        return ChatConverter.toChatRoomList(chatRoomType, chatRoomList);
+        List<ChatRoomPreview> chatRoomList = chatRoomRepository.findChatRoomList(memberId, chatRoomType);
+        return ChatConverter.toChatRoomPreviewList(chatRoomType, chatRoomList);
     }
 
     // 채팅방 상세 조회
@@ -44,9 +46,13 @@ public class ChatQueryService {
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new ChatException(ChatErrorCode.CHAT_ROOM_NOT_FOUND));
+        Member opponent = chatRoom.getChatMemberList().stream()
+                .map(ChatMember::getMember)
+                .filter(m -> !m.getId().equals(memberId))
+                .findFirst()
+                .orElseThrow();
         List<ChatMessage> chatMessageList = chatMessageRepository.findAllByChatRoomOrderByCreatedAtDesc(chatRoom);
-
-        return null;
+        return ChatConverter.toChatMessageList(chatRoom, chatMessageList, opponent);
     }
 
 }
