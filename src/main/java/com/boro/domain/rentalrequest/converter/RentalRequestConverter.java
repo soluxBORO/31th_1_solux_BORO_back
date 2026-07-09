@@ -3,8 +3,10 @@ package com.boro.domain.rentalrequest.converter;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Item;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.rentalrequest.dto.request.RentalRequestRequestDTO;
 import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
 import com.boro.domain.rentalrequest.entity.RentalRequest;
+import com.boro.domain.rentalrequest.entity.Review;
 import com.boro.domain.rentalrequest.entity.enums.RentalProgressStatus;
 import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
 
@@ -48,5 +50,15 @@ public class RentalRequestConverter {
                 .member(member)
                 .post(post)
                 .build();
+    }
+
+    public static Review toReview(Member member, RentalRequest rentalRequest, RentalRequestRequestDTO.Review request){
+        return Review.builder()
+                .reviewSentiment(request.reviewSentiment())
+                .content(request.content())
+                .member(member)
+                .rentalRequest(rentalRequest)
+                .build();
+
     }
 }
