@@ -14,7 +14,13 @@ public class ChatRequestDTO {
     ){}
 
     public record ChatRoom(
+            Long postId,
+            ChatRoomType chatRoomType
+    ){}
+
+    public record ChatRoomTest(
             Long ownerId,
+            Long postId,
             String chatRoomName,
             ChatRoomType chatRoomType
     ){}
