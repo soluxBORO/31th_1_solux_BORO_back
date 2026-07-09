@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
 @RestController
@@ -59,5 +61,12 @@ public class MemberController {
     public ApiResponse<Void> withdraw(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         authCommandService.withdraw(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(null);
+    }
+
+    @Operation(summary = "포인트 이력 조회 API", description = "포인트 이력 조회하는 API")
+    @GetMapping("/points")
+    public ApiResponse<List<MemberResponseDTO.PointHistory>> getPointHistory(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        List<MemberResponseDTO.PointHistory> pointHistory = memberQueryService.getPointHistory(customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(pointHistory);
     }
 }

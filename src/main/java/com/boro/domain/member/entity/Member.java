@@ -41,12 +41,25 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Social> socialList = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PointHistory> pointHistoryList = new ArrayList<>();
+
     public void changeMemberInfo(MemberRequestDTO.ChangeMemberInfo request){
         this.nickname = request.nickname();
+    }
+
+    public void applyPoint(int point) {
+        this.point += point;
     }
 
     public void addSocial(Social social){
         socialList.add(social);
         social.setMember(this);
+    }
+
+    public void addPointHistory(PointHistory pointHistory){
+        pointHistoryList.add(pointHistory);
+        pointHistory.setMember(this);
     }
 }

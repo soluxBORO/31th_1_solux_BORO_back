@@ -10,7 +10,9 @@ import com.boro.domain.auth.entity.Social;
 import com.boro.domain.auth.factory.GoogleUserLoader;
 import com.boro.domain.auth.repository.SocialRepository;
 import com.boro.domain.auth.service.query.RedisStorageQueryService;
+import com.boro.domain.member.dto.request.MemberRequestDTO;
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.domain.member.entity.enums.SocialType;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.global.error.code.status.AuthErrorCode;
@@ -23,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,7 @@ public class AuthCommandService {
     private final TokenCommandService tokenCommandService;
     private final RedisStorageCommandService redisStorageCommandService;
     private final RedisStorageQueryService redisStorageQueryService;
+    private final ApplicationEventPublisher eventPublisher;
     private final JwtUtil jwtUtil;
 
     public OAuth2ResponseDTO.Login loginWithOAuth(HttpServletRequest request, HttpServletResponse response,
@@ -80,6 +84,11 @@ public class AuthCommandService {
         CustomUserDetails customUserDetails = new CustomUserDetails(member);
         AuthResponseDTO.TokenResult loginToken = tokenCommandService.createLoginToken(customUserDetails);
         redisStorageCommandService.addRefreshToken(member.getId(), loginToken.refreshToken());
+
+        eventPublisher.publishEvent(
+                new MemberRequestDTO.PointGrantEvent(member.getId(), PointReason.SIGNUP)
+        );
+        log.info("포인트 이벤트 발행 완료!");
         return loginToken;
     }
 
