@@ -42,7 +42,8 @@ public class ChatResponseDTO {
             String chatName,
             String profileUrl,
             String lastMessageContent,
-            LocalDateTime lastMessageAt
+            LocalDateTime lastMessageAt,
+            Integer unreadCount
     ){}
     
     // 채팅방 리스트 조회

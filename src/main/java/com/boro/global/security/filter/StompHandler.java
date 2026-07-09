@@ -10,7 +10,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.security.core.Authentication;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -26,15 +26,18 @@ public class StompHandler implements ChannelInterceptor {
         log.info("===== STOMP preSend =====");
         log.info("STOMP Command = {}", accessor.getCommand());
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            accessor.setLeaveMutable(true);
             log.info("CONNECT 요청 수신");
             String token = extractToken(accessor);
             log.info("Extract Token : {}", token.substring(0, 20) + "...");
-            Authentication authentication = jwtProvider.getAuthentication(token);
-            log.info("Authentication : {}", authentication.getName());
-            accessor.setUser(authentication);
-            log.info("User(after) : {}", accessor.getUser());
+            Long memberId = Long.parseLong(jwtProvider.getAuthentication(token).getName());
+            accessor.getSessionAttributes().put("AUTHENTICATED_MEMBER_ID", memberId);
+            return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
+        } else if (StompCommand.SEND.equals(accessor.getCommand())) {
+            log.info("===== SEND 요청 수신 =====");
+        } else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+            log.info("===== SUBSCRIBE 요청 수신 =====");
         }
-
         return message;
     }
 

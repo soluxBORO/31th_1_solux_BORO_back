@@ -48,7 +48,7 @@ public class ChatController {
             @PathVariable Long chatRoomId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ){
-        ChatResponseDTO.ChatMessageList chatRoomDetail = chatQueryService.getChatRoomDetail(chatRoomId, customUserDetails.getMemberId());
+        ChatResponseDTO.ChatMessageList chatRoomDetail = chatQueryService.getChatRoomDetail(customUserDetails.getMemberId(), chatRoomId);
         return ApiResponse.onSuccess(chatRoomDetail);
     }
 

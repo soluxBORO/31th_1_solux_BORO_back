@@ -44,10 +44,10 @@ public class ChatCommandService {
         chatRoomRepository.save(chatRoom);
     }
 
-    public ChatResponseDTO.ChatMessage saveMessage(Long memberId, ChatRequestDTO.ChatMessage request){
+    public ChatResponseDTO.ChatMessage saveMessage(Long memberId, Long roomId, ChatRequestDTO.ChatMessage request){
         validateMessage(request);
 
-        ChatRoom chatRoom = chatRoomRepository.findById(request.roomId())
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new ChatException(ChatErrorCode.CHAT_ROOM_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId)
@@ -62,11 +62,10 @@ public class ChatCommandService {
                         ChatMessageImage chatMessageImage = ChatConverter.toChatMessageImage(imageUrl);
                         chatMessage.addChatMessageImage(chatMessageImage);
                     });
-            chatMessageRepository.save(chatMessage);
         }
 
+        chatMessageRepository.save(chatMessage);
         chatRoom.updateLastMessageContent(chatMessage.getContent(), chatMessage.getCreatedAt());
-        chatRoomRepository.save(chatRoom);
         return ChatConverter.toChatMessageDTO(chatMessage);
     }
 
