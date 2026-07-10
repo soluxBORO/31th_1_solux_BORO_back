@@ -15,6 +15,7 @@ public enum RentalRequestErrorCode implements BaseErrorCode {
     NOT_RENTING(HttpStatus.BAD_REQUEST, "RENTAL400_2", "현재 대여 중인 요청만 반납 처리할 수 있습니다."),
     RENTAL_REQUEST_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "RENTAL400_3", "이미 해당 게시글에 대한 대여 요청이 존재합니다."),
     CANNOT_REQUEST_OWN_POST(HttpStatus.BAD_REQUEST, "RENTAL400_4", "자신이 작성한 게시글에는 대여 요청을 할 수 없습니다."),
+    NOT_RENTAL_PARTICIPANT(HttpStatus.FORBIDDEN, "RENTAL403_1", "해당 거래의 참여자가 아닙니다."),
     ;
 
     private final HttpStatus status;

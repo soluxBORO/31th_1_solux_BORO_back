@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/rental")
 @RequiredArgsConstructor
@@ -29,6 +26,17 @@ public class RentalController {
             @RequestBody @Valid RentalRequestRequestDTO.Complete request
     ) {
         rentalRequestCommandService.completeReturn(customUserDetails.getMemberId(), request);
+        return ApiResponse.onSuccess(null);
+    }
+
+    @Operation(summary = "리뷰 생성 API", description = "대여 반납 완료 후, 리뷰 생성하는 API")
+    @PostMapping("/{rentalId}/review")
+    public ApiResponse<Void> createReview(
+            @PathVariable Long rentalId,
+            @RequestBody RentalRequestRequestDTO.Review review,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ){
+        rentalRequestCommandService.createReview(customUserDetails.getMemberId(), rentalId, review);
         return ApiResponse.onSuccess(null);
     }
 }

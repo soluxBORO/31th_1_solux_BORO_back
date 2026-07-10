@@ -1,5 +1,6 @@
 package com.boro.domain.rentalrequest.dto.request;
 
+import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import jakarta.validation.constraints.NotNull;
 
 public record RentalRequestRequestDTO() {
@@ -20,4 +21,9 @@ public record RentalRequestRequestDTO() {
             @NotNull(message = "대여 요청 ID를 입력해야 합니다.")
             Long rentalRequestId
     ) {}
+
+    public record Review(
+            ReviewSentiment reviewSentiment,
+            String content
+    ){}
 }

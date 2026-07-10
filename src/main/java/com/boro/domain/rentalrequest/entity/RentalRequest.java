@@ -28,10 +28,12 @@ public class RentalRequest extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RentalProgressStatus progressStatus;
 
+    // 빌려주는 사람
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    // post.getMember() : 빌리는 사람
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;

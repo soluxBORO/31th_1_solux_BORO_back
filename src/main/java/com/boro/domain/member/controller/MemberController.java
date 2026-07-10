@@ -5,6 +5,7 @@ import com.boro.domain.member.dto.request.MemberRequestDTO;
 import com.boro.domain.member.dto.response.MemberResponseDTO;
 import com.boro.domain.member.service.command.MemberCommandService;
 import com.boro.domain.member.service.query.MemberQueryService;
+import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import com.boro.global.error.ApiResponse;
 import com.boro.global.security.domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,5 +69,25 @@ public class MemberController {
     public ApiResponse<List<MemberResponseDTO.PointHistory>> getPointHistory(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         List<MemberResponseDTO.PointHistory> pointHistory = memberQueryService.getPointHistory(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(pointHistory);
+    }
+
+    @Operation(summary = "작성한 대여 후기 리스트 조회 API", description = "내가 작성한 대여 후기 리스트 조회하는 API")
+    @GetMapping("/reviews/written")
+    public ApiResponse<MemberResponseDTO.Review> getReceivedReviews(
+            ReviewSentiment reviewSentiment,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ){
+        MemberResponseDTO.Review writtenReviews = memberQueryService.getWrittenReviews(reviewSentiment, customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(writtenReviews);
+    }
+
+    @Operation(summary = "받은 대여 후기 리스트 조회 API", description = "내가 받은 대여 후기 리스트 조회하는 API")
+    @GetMapping("/reviews/received")
+    public ApiResponse<MemberResponseDTO.Review> getWrittenReviews(
+            ReviewSentiment reviewSentiment,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ){
+        MemberResponseDTO.Review receivedReviews = memberQueryService.getReceivedReviews(reviewSentiment, customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(receivedReviews);
     }
 }
