@@ -57,4 +57,11 @@ public class EmptySpotController {
         List<EmptySpotResponseDTO.EmptySpotSummary> response = emptySpotQueryService.getEmptySpotList();
         return ApiResponse.onSuccess(response);
     }
+
+    @Operation(summary = "빈자리 게시글 상세 조회 API", description = "빈자리 양도 게시글의 상세 정보를 조회하는 API")
+    @GetMapping("/{emptySpotId}")
+    public ApiResponse<EmptySpotResponseDTO.EmptySpotInfo> getEmptySpotDetail(@PathVariable Long emptySpotId) {
+        EmptySpotResponseDTO.EmptySpotInfo response = emptySpotQueryService.getEmptySpotDetail(emptySpotId);
+        return ApiResponse.onSuccess(response);
+    }
 }

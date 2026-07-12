@@ -44,4 +44,20 @@ public class EmptySpotConverter {
                 .authorNickname(emptySpot.getPost().getMember().getNickname())
                 .build();
     }
+
+    public static EmptySpotResponseDTO.EmptySpotInfo toEmptySpotInfo(EmptySpot emptySpot) {
+        Post post = emptySpot.getPost();
+        return EmptySpotResponseDTO.EmptySpotInfo.builder()
+                .emptySpotId(emptySpot.getId())
+                .status(post.getStatus())
+                .location(emptySpot.getLocation())
+                .floor(emptySpot.getFloor())
+                .seatNumber(emptySpot.getSeatNumber())
+                .hasPowerOutlet(emptySpot.getHasPowerOutlet())
+                .hasWindowSeat(emptySpot.getHasWindowSeat())
+                .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
+                .createdAt(emptySpot.getCreatedAt())
+                .authorNickname(post.getMember().getNickname())
+                .build();
+    }
 }
