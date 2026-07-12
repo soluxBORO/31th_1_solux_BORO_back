@@ -1,6 +1,5 @@
 package com.boro.domain.emptyspot.dto.request;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,7 +24,6 @@ public record EmptySpotRequestDTO() {
             Boolean hasWindowSeat,
 
             @NotNull(message = "퇴실 예정 시간을 입력해야 합니다.")
-            @Future(message = "퇴실 예정 시간은 현재 시각 이후여야 합니다.")
             LocalDateTime expectedCheckoutTime
     ) {}
 }
