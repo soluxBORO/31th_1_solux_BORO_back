@@ -14,6 +14,7 @@ public record EmptySpotRequestDTO() {
             @NotNull(message = "층을 입력해야 합니다.")
             Integer floor,
 
+            @NotNull(message = "좌석 번호를 입력해야 합니다.")
             Integer seatNumber,
 
             @NotNull(message = "콘센트 여부를 선택해야 합니다.")
