@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +34,15 @@ public class EmptySpotController {
         EmptySpotResponseDTO.EmptySpotDetail response =
                 emptySpotCommandService.createEmptySpot(customUserDetails.getMemberId(), request);
         return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "빈자리 게시글 삭제 API", description = "빈자리 양도 게시글을 삭제하는 API")
+    @DeleteMapping("/{emptySpotId}")
+    public ApiResponse<Void> deleteEmptySpot(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long emptySpotId
+    ) {
+        emptySpotCommandService.deleteEmptySpot(customUserDetails.getMemberId(), emptySpotId);
+        return ApiResponse.onSuccess(null);
     }
 }

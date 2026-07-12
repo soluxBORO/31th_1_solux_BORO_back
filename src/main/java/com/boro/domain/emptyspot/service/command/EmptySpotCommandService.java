@@ -3,6 +3,7 @@ package com.boro.domain.emptyspot.service.command;
 import com.boro.domain.emptyspot.converter.EmptySpotConverter;
 import com.boro.domain.emptyspot.dto.request.EmptySpotRequestDTO;
 import com.boro.domain.emptyspot.dto.response.EmptySpotResponseDTO;
+import com.boro.domain.emptyspot.repository.EmptySpotRepository;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.post.converter.PostConverter;
@@ -28,6 +29,7 @@ public class EmptySpotCommandService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final EmptySpotRepository emptySpotRepository;
 
     public EmptySpotResponseDTO.EmptySpotDetail createEmptySpot(Long memberId, EmptySpotRequestDTO.CreateEmptySpot request) {
         validateCheckoutTime(request.expectedCheckoutTime());
@@ -41,6 +43,18 @@ public class EmptySpotCommandService {
 
         Post savedPost = postRepository.save(post);
         return EmptySpotConverter.toEmptySpotDetail(savedPost);
+    }
+
+    public void deleteEmptySpot(Long memberId, Long emptySpotId) {
+        EmptySpot emptySpot = emptySpotRepository.findById(emptySpotId)
+                .orElseThrow(() -> new EmptySpotException(EmptySpotErrorCode.EMPTY_SPOT_NOT_FOUND));
+
+        Post post = emptySpot.getPost();
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new EmptySpotException(EmptySpotErrorCode.NOT_EMPTY_SPOT_OWNER);
+        }
+
+        post.markAsDeleted();
     }
 
     private void validateCheckoutTime(LocalDateTime expectedCheckoutTime) {
