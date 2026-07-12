@@ -14,7 +14,7 @@ public interface EmptySpotRepository extends JpaRepository<EmptySpot, Long> {
             SELECT es FROM EmptySpot es
             JOIN FETCH es.post p
             JOIN FETCH p.member m
-            WHERE p.status <> com.boro.domain.post.entity.enums.PostStatus.DELETED
+            WHERE p.status = com.boro.domain.post.entity.enums.PostStatus.ACTIVE
               AND es.expectedCheckoutTime > :now
             ORDER BY es.expectedCheckoutTime ASC
             """)
