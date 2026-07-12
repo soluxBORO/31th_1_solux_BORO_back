@@ -16,4 +16,17 @@ public record EmptySpotResponseDTO() {
             Boolean hasWindowSeat,
             LocalDateTime expectedCheckoutTime
     ) {}
+
+    @Builder
+    public record EmptySpotSummary(
+            Long emptySpotId,
+            String location,
+            Integer floor,
+            Integer seatNumber,
+            Boolean hasPowerOutlet,
+            Boolean hasWindowSeat,
+            LocalDateTime expectedCheckoutTime,
+            LocalDateTime createdAt,
+            String authorNickname
+    ) {}
 }
