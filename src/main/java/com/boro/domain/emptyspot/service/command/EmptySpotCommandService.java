@@ -45,6 +45,26 @@ public class EmptySpotCommandService {
         return EmptySpotConverter.toEmptySpotDetail(savedPost);
     }
 
+    public void updateEmptySpot(Long memberId, Long emptySpotId, EmptySpotRequestDTO.EditEmptySpot request) {
+        validateCheckoutTime(request.expectedCheckoutTime());
+
+        EmptySpot emptySpot = emptySpotRepository.findById(emptySpotId)
+                .orElseThrow(() -> new EmptySpotException(EmptySpotErrorCode.EMPTY_SPOT_NOT_FOUND));
+
+        if (!emptySpot.getPost().getMember().getId().equals(memberId)) {
+            throw new EmptySpotException(EmptySpotErrorCode.NOT_EMPTY_SPOT_OWNER);
+        }
+
+        emptySpot.updateInfo(
+                request.location(),
+                request.floor(),
+                request.seatNumber(),
+                request.hasPowerOutlet(),
+                request.hasWindowSeat(),
+                request.expectedCheckoutTime()
+        );
+    }
+
     public void deleteEmptySpot(Long memberId, Long emptySpotId) {
         EmptySpot emptySpot = emptySpotRepository.findById(emptySpotId)
                 .orElseThrow(() -> new EmptySpotException(EmptySpotErrorCode.EMPTY_SPOT_NOT_FOUND));
