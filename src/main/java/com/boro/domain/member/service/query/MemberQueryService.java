@@ -8,6 +8,7 @@ import com.boro.domain.member.repository.AssetRepository;
 import com.boro.domain.member.repository.MemberAssetRepository;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.member.repository.PointHistoryRepository;
+import com.boro.domain.post.repository.PostLikeRepository;
 import com.boro.domain.rentalrequest.entity.Review;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import com.boro.domain.rentalrequest.repository.ReviewRepository;
@@ -29,6 +30,7 @@ public class MemberQueryService {
     private final ReviewRepository reviewRepository;
     private final AssetRepository assetRepository;
     private final MemberAssetRepository memberAssetRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public Member findById(Long memberId){
         return memberRepository.findById(memberId)
@@ -89,6 +91,13 @@ public class MemberQueryService {
         return memberAssetRepository.findByMember(member).stream()
                 .map(MemberConverter::toMemberAsset)
                 .toList();
+    }
+
+    public List<MemberResponseDTO.MemberLikePost> getLikePosts(Long memberId){
+        return postLikeRepository.findLikedPostsWithLikeCount(memberId).stream()
+                .map(MemberConverter::toMemberLikePost)
+                .toList();
+
     }
 
 }

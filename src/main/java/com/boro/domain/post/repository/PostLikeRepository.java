@@ -11,6 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
+    @Query("""
+    SELECT DISTINCT pl
+    FROM PostLike pl
+    JOIN FETCH pl.post p
+    JOIN FETCH p.member
+    JOIN FETCH p.item
+    LEFT JOIN FETCH p.postLikeList
+    WHERE pl.member.id = :memberId
+    ORDER BY pl.createdAt DESC
+    """)
+    List<PostLike> findLikedPostsWithLikeCount(
+            @Param("memberId") Long memberId
+    );
+
     Optional<PostLike> findByPostAndMember(Post post, Member member);
 
     long countByPost(Post post);

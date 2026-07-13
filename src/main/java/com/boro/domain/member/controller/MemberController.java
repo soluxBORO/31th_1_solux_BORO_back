@@ -110,4 +110,13 @@ public class MemberController {
         MemberResponseDTO.MemberAsset memberAsset = memberCommandService.equipMemberAsset(customUserDetails.getMemberId(), assetId, request);
         return ApiResponse.onSuccess(memberAsset);
     }
+
+    @Operation(summary = "좋아요한 게시물 조회 API", description = "내가 좋아요한 게시물 조회하는 API")
+    @GetMapping("/liked-posts")
+    public ApiResponse<List<MemberResponseDTO.MemberLikePost>> getLikePosts(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ){
+        List<MemberResponseDTO.MemberLikePost> likePosts = memberQueryService.getLikePosts(customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(likePosts);
+    }
 }

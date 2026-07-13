@@ -82,7 +82,8 @@ public class PostCommandService {
                     return false;
                 })
                 .orElseGet(() -> {
-                    postLikeRepository.save(PostLike.builder().post(post).member(member).build());
+                    PostLike savedPostLike = postLikeRepository.save(PostLike.builder().post(post).member(member).build());
+                    post.addPostLike(savedPostLike);
                     return true;
                 });
 
