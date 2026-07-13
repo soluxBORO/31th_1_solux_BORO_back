@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             JOIN FETCH p.item i
             JOIN FETCH p.member m
             WHERE p.status <> com.boro.domain.post.entity.enums.PostStatus.DELETED
-              AND (:category IS NULL OR i.category = :category)
+              AND (:category IS NULL OR p.postCategory = :category)
               AND (:onlyAvailable = false OR p.status = com.boro.domain.post.entity.enums.PostStatus.ACTIVE)
             ORDER BY p.createdAt DESC
             """)

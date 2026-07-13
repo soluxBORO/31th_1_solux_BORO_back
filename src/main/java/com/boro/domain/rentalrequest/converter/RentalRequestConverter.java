@@ -23,15 +23,15 @@ public class RentalRequestConverter {
         String imageUrl = null;
 
         if (Objects.requireNonNull(post.getPostCategory()) == PostCategory.EMPTY_SPOTS) {
+            EmptySpot emptySpot = post.getEmptySpot();
+            seatDetail = toSeatDetail(emptySpot);
+        } else {
             Item item = post.getItem();
             itemDetail = toItemDetail(item);
             imageUrl = item.getItemImages().stream()
                     .findFirst()
                     .map(ItemImage::getImageUrl)
                     .orElse(null);
-        } else {
-            EmptySpot emptySpot = post.getEmptySpot();
-            seatDetail = toSeatDetail(emptySpot);
         }
 
         return RentalRequestResponseDTO.RentalRequestPreview.builder()
@@ -42,6 +42,8 @@ public class RentalRequestConverter {
                 .postCategory(post.getPostCategory())
                 .ownerNickname(post.getMember().getNickname())
                 .createdAt(rentalRequest.getCreatedAt())
+                .itemDetail(itemDetail)
+                .seatDetail(seatDetail)
                 .build();
     }
 

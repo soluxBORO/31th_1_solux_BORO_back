@@ -17,7 +17,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
             JOIN FETCH rr.post p
             JOIN FETCH p.item i
             JOIN FETCH p.member borrower
-            WHERE rr.member.id = :memberId
+            WHERE p.member.id = :memberId
               AND rr.requestStatus IN (
             com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.PENDING,
             com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
@@ -31,7 +31,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
             JOIN FETCH rr.post p
             JOIN FETCH p.item i
             JOIN FETCH rr.member lender
-            WHERE p.member.id = :memberId
+            WHERE rr.member.id = :memberId
             AND rr.requestStatus = com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
             ORDER BY rr.createdAt DESC
             """)
