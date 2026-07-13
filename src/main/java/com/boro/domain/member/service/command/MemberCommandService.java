@@ -65,4 +65,15 @@ public class MemberCommandService {
         return AssetConverter.toCreatedAsset(savedMemberAsset.getAsset());
     }
 
+    public MemberResponseDTO.MemberAsset equipMemberAsset(Long memberId, Long assetId, MemberRequestDTO.MemberAssetEquipRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Asset asset = assetRepository.findById(assetId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.ASSET_NOT_FOUND));
+        MemberAsset memberAsset = memberAssetRepository.findByMemberAndAsset(member, asset)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ASSET_NOT_FOUND));
+        memberAsset.updateEquippedStatus(request.equipped());
+        return MemberConverter.toMemberAsset(memberAsset);
+    }
+
 }
