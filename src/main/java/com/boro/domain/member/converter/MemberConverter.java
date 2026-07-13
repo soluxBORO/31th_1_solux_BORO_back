@@ -63,7 +63,7 @@ public class MemberConverter {
         return MemberResponseDTO.MemberAsset.builder()
                 .itemName(asset.getName())
                 .itemCategory(asset.getAssetCategory())
-                .equipped(memberAsset.getEquipped())
+                .equipped(memberAsset.isEquipped())
                 .build();
     }
 }

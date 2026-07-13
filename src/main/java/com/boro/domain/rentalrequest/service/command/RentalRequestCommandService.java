@@ -90,7 +90,7 @@ public class RentalRequestCommandService {
         RentalRequest rentalRequest = rentalRequestRepository.findById(rentalRequestId)
                 .orElseThrow(() -> new RentalRequestException(RentalRequestErrorCode.RENTAL_REQUEST_NOT_FOUND));
 
-        if (rentalRequest.getRequestStatus().equals(RentalRequestStatus.COMPLETED)){
+        if (!rentalRequest.getRequestStatus().equals(RentalRequestStatus.COMPLETED)){
             throw new RentalRequestException(RentalRequestErrorCode.REVIEW_NOT_ALLOWED_FOR_UNAPPROVED_RENTAL);
         }
 
