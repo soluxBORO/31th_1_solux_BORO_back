@@ -51,6 +51,15 @@ public class MemberCommandService {
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.ASSET_NOT_FOUND));
+
+        int price = asset.getPrice();
+        if (member.getPoint() < price){
+            throw new MemberException(MemberErrorCode.INSUFFICIENT_POINT);
+        }
+        member.applyPoint(-price);
+        PointHistory pointHistory = MemberConverter.toPointHistory(PointReason.ITEM_PURCHASE);
+        member.addPointHistory(pointHistory);
+
         MemberAsset memberAsset = AssetConverter.toMemberAsset(member, asset);
         MemberAsset savedMemberAsset = memberAssetRepository.save(memberAsset);
         return AssetConverter.toCreatedAsset(savedMemberAsset.getAsset());
