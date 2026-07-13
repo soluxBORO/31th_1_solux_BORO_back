@@ -2,7 +2,6 @@ package com.boro.domain.rentalrequest.entity;
 
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Post;
-import com.boro.domain.rentalrequest.entity.enums.RentalProgressStatus;
 import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
 import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -25,8 +24,11 @@ public class RentalRequest extends BaseEntity {
     @Builder.Default
     private RentalRequestStatus requestStatus = RentalRequestStatus.PENDING;
 
-    @Enumerated(EnumType.STRING)
-    private RentalProgressStatus progressStatus;
+    @Builder.Default
+    private boolean borrowerReturned = false;
+
+    @Builder.Default
+    private boolean ownerReturned = false;
 
     // 빌려주는 사람
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,14 +42,25 @@ public class RentalRequest extends BaseEntity {
 
     public void approve() {
         this.requestStatus = RentalRequestStatus.APPROVED;
-        this.progressStatus = RentalProgressStatus.RENTING;
     }
 
     public void reject() {
         this.requestStatus = RentalRequestStatus.REJECTED;
     }
 
-    public void complete() {
-        this.progressStatus = RentalProgressStatus.RETURNED;
+    public void completeBorrowerReturn() {
+        this.borrowerReturned = true;
+        updateCompletedStatus();
+    }
+
+    public void completeOwnerReturn() {
+        this.ownerReturned = true;
+        updateCompletedStatus();
+    }
+
+    private void updateCompletedStatus() {
+        if (borrowerReturned && ownerReturned) {
+            this.requestStatus = RentalRequestStatus.COMPLETED;
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.boro.domain.chat.dto.response.ChatResponseDTO;
 import com.boro.domain.chat.entity.enums.ChatRoomType;
 import com.boro.domain.chat.service.command.ChatCommandService;
 import com.boro.domain.chat.service.query.ChatQueryService;
+import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
 import com.boro.global.error.ApiResponse;
 import com.boro.global.security.domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,12 +25,12 @@ public class ChatController {
 
     @Operation(summary = "대여 요청 및 채팅방 생성 API", description = "채팅을 하는 순간 요청이 생성되는 API")
     @PostMapping
-    public ApiResponse<Void> requestRental(
+    public ApiResponse<RentalRequestResponseDTO.CreatedRentalRequest> requestRental(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody ChatRequestDTO.ChatRoom request
     ){
-        chatCommandService.saveChatRoom(customUserDetails.getMemberId(), request);
-        return ApiResponse.onSuccess(null);
+        RentalRequestResponseDTO.CreatedRentalRequest createdRentalRequest = chatCommandService.saveChatRoom(customUserDetails.getMemberId(), request);
+        return ApiResponse.onSuccess(createdRentalRequest);
     }
 
     @Operation(summary = "채팅 테스트 - 채팅방 생성 API", description = "채팅 테스트를 위한 API")

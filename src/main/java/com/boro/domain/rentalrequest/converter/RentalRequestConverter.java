@@ -7,7 +7,6 @@ import com.boro.domain.rentalrequest.dto.request.RentalRequestRequestDTO;
 import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
 import com.boro.domain.rentalrequest.entity.RentalRequest;
 import com.boro.domain.rentalrequest.entity.Review;
-import com.boro.domain.rentalrequest.entity.enums.RentalProgressStatus;
 import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
 
 public class RentalRequestConverter {
@@ -40,9 +39,10 @@ public class RentalRequestConverter {
         if (rentalRequest.getRequestStatus() == RentalRequestStatus.PENDING) {
             return RentalRequestResponseDTO.DisplayStatus.PENDING;
         }
-        return rentalRequest.getProgressStatus() == RentalProgressStatus.RETURNED
-                ? RentalRequestResponseDTO.DisplayStatus.RETURNED
-                : RentalRequestResponseDTO.DisplayStatus.RENTING;
+//        return rentalRequest.getProgressStatus() == RentalProgressStatus.RETURNED
+//                ? RentalRequestResponseDTO.DisplayStatus.RETURNED
+//                : RentalRequestResponseDTO.DisplayStatus.RENTING;
+        return null;
     }
 
     public static RentalRequest toRentalRequest(Member member, Post post){
@@ -60,6 +60,35 @@ public class RentalRequestConverter {
                 .writer(writer)
                 .rentalRequest(rentalRequest)
                 .build();
+    }
 
+    public static RentalRequestResponseDTO.DecisionResult toDecisionResult(RentalRequest rentalRequest) {
+        return RentalRequestResponseDTO.DecisionResult.builder()
+                .rentalRequestStatus(rentalRequest.getRequestStatus())
+                .borrowerReturned(rentalRequest.isBorrowerReturned())
+                .ownerReturned(rentalRequest.isOwnerReturned())
+                .build();
+    }
+
+    public static RentalRequestResponseDTO.CreatedRentalRequest toCreatedRentalRequest(RentalRequest rentalRequest) {
+        return RentalRequestResponseDTO.CreatedRentalRequest.builder()
+                .rentalRequestId(rentalRequest.getId())
+                .requestStatus(rentalRequest.getRequestStatus())
+                .borrowerReturned(rentalRequest.isBorrowerReturned())
+                .ownerReturned(rentalRequest.isOwnerReturned())
+                .memberId(rentalRequest.getMember().getId())
+                .postId(rentalRequest.getPost().getId())
+                .build();
+    }
+
+    public static RentalRequestResponseDTO.CreatedReview toCreatedReview(Review review){
+        return RentalRequestResponseDTO.CreatedReview.builder()
+                .reviewId(review.getId())
+                .reviewSentiment(review.getReviewSentiment())
+                .content(review.getContent())
+                .writerId(review.getWriter().getId())
+                .receiverId(review.getReceiver().getId())
+                .rentalRequestId(review.getRentalRequest().getId())
+                .build();
     }
 }
