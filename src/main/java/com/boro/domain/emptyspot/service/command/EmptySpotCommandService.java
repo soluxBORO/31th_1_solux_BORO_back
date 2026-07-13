@@ -9,6 +9,7 @@ import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.post.converter.PostConverter;
 import com.boro.domain.post.entity.EmptySpot;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.repository.PostRepository;
 import com.boro.global.error.code.status.EmptySpotErrorCode;
 import com.boro.global.error.code.status.MemberErrorCode;
@@ -37,7 +38,7 @@ public class EmptySpotCommandService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        Post post = PostConverter.toPost(member);
+        Post post = PostConverter.toPost(member, PostCategory.EMPTY_SPOTS);
         EmptySpot emptySpot = EmptySpotConverter.toEmptySpot(request);
         post.assignEmptySpot(emptySpot);
 

@@ -1,6 +1,5 @@
 package com.boro.domain.post.entity;
 
-import com.boro.domain.post.entity.enums.ItemCategory;
 import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -22,9 +21,6 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
-
-    @Enumerated(EnumType.STRING)
-    private ItemCategory category;
 
     private String title;
 
@@ -54,10 +50,9 @@ public class Item extends BaseEntity {
         itemImage.setItem(this);
     }
 
-    public void updateInfo(ItemCategory category, String title, String description,
-                            LocalDate rentalStartTime, LocalDate rentalEndTime,
-                            Integer rentalPrice, RentalPriceUnit rentalPriceUnit) {
-        this.category = category;
+    public void updateInfo(String title, String description,
+                           LocalDate rentalStartTime, LocalDate rentalEndTime,
+                           Integer rentalPrice, RentalPriceUnit rentalPriceUnit) {
         this.title = title;
         this.description = description;
         this.rentalStartTime = rentalStartTime;

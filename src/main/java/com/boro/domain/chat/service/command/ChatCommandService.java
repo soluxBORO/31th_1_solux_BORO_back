@@ -13,6 +13,7 @@ import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.repository.PostRepository;
+import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
 import com.boro.domain.rentalrequest.service.command.RentalRequestCommandService;
 import com.boro.global.error.code.status.ChatErrorCode;
 import com.boro.global.error.code.status.MemberErrorCode;
@@ -38,7 +39,7 @@ public class ChatCommandService {
     private final PostRepository postRepository;
 
     // TODO: 요청 게시물과 연결 필요
-    public void saveChatRoom(Long memberId, ChatRequestDTO.ChatRoom request){
+    public RentalRequestResponseDTO.CreatedRentalRequest saveChatRoom(Long memberId, ChatRequestDTO.ChatRoom request){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         Post post = postRepository.findById(request.postId())
@@ -50,8 +51,9 @@ public class ChatCommandService {
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, member));
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, owner));
 
-        rentalRequestCommandService.createRentalRequest(post, member);
+        RentalRequestResponseDTO.CreatedRentalRequest rentalRequest = rentalRequestCommandService.createRentalRequest(post, member);
         chatRoomRepository.save(chatRoom);
+        return rentalRequest;
     }
 
     public void saveChatRoomTest(Long memberId, ChatRequestDTO.ChatRoomTest request){

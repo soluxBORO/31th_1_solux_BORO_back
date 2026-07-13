@@ -1,9 +1,10 @@
 package com.boro.domain.post.entity.enums;
 
-public enum ItemCategory {
+public enum PostCategory {
     DEPARTMENT_JACKET,
     MAJOR_BOOKS,
     ELECTRONICS,
     LIVING_SUPPLIES,
-    ETC
+    ETC,
+    EMPTY_SPOTS
 }

@@ -1,6 +1,7 @@
 package com.boro.domain.post.entity;
 
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.entity.enums.PostStatus;
 import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -23,6 +24,9 @@ public class Post extends BaseEntity {
     @Builder.Default
     private PostStatus status = PostStatus.ACTIVE;
 
+    @Enumerated(EnumType.STRING)
+    private PostCategory postCategory;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -32,6 +36,10 @@ public class Post extends BaseEntity {
 
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private EmptySpot emptySpot;
+
+    public void updatePostCategory(PostCategory postCategory){
+        this.postCategory = postCategory;
+    }
 
     public void assignItem(Item item) {
         this.item = item;

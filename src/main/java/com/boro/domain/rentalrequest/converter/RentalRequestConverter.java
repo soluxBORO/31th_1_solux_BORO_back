@@ -1,48 +1,67 @@
 package com.boro.domain.rentalrequest.converter;
 
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.post.entity.EmptySpot;
 import com.boro.domain.post.entity.Item;
+import com.boro.domain.post.entity.ItemImage;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.rentalrequest.dto.request.RentalRequestRequestDTO;
 import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
 import com.boro.domain.rentalrequest.entity.RentalRequest;
 import com.boro.domain.rentalrequest.entity.Review;
-import com.boro.domain.rentalrequest.entity.enums.RentalProgressStatus;
-import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
+
+import java.util.Objects;
 
 public class RentalRequestConverter {
 
-    public static RentalRequestResponseDTO.BorrowedItem toBorrowedItem(RentalRequest rentalRequest) {
-        Item item = rentalRequest.getPost().getItem();
-        return RentalRequestResponseDTO.BorrowedItem.builder()
-                .requestStatus(toDisplayStatus(rentalRequest))
-                .rentalStartTime(item.getRentalStartTime())
-                .lender(rentalRequest.getPost().getMember().getNickname())
-                .title(item.getTitle())
+    public static RentalRequestResponseDTO.RentalRequestPreview toRentalRequestPreview(RentalRequest rentalRequest) {
+        Post post = rentalRequest.getPost();
+
+        RentalRequestResponseDTO.ItemDetail itemDetail = null;
+        RentalRequestResponseDTO.SeatDetail seatDetail = null;
+        String imageUrl = null;
+
+        if (Objects.requireNonNull(post.getPostCategory()) == PostCategory.EMPTY_SPOTS) {
+            Item item = post.getItem();
+            itemDetail = toItemDetail(item);
+            imageUrl = item.getItemImages().stream()
+                    .findFirst()
+                    .map(ItemImage::getImageUrl)
+                    .orElse(null);
+        } else {
+            EmptySpot emptySpot = post.getEmptySpot();
+            seatDetail = toSeatDetail(emptySpot);
+        }
+
+        return RentalRequestResponseDTO.RentalRequestPreview.builder()
+                .rentalRequestId(rentalRequest.getId())
+                .postId(post.getId())
+                .imageUrl(imageUrl)
+                .rentalRequestStatus(rentalRequest.getRequestStatus())
+                .postCategory(post.getPostCategory())
+                .ownerNickname(post.getMember().getNickname())
+                .createdAt(rentalRequest.getCreatedAt())
                 .build();
     }
 
-    public static RentalRequestResponseDTO.LentItem toLentItem(RentalRequest rentalRequest) {
-        Item item = rentalRequest.getPost().getItem();
-        return RentalRequestResponseDTO.LentItem.builder()
-                .requestStatus(toDisplayStatus(rentalRequest))
+    public static RentalRequestResponseDTO.ItemDetail toItemDetail(Item item){
+        return RentalRequestResponseDTO.ItemDetail.builder()
+                .title(item.getTitle())
                 .rentalStartTime(item.getRentalStartTime())
                 .rentalEndTime(item.getRentalEndTime())
-                .borrower(rentalRequest.getMember().getNickname())
-                .title(item.getTitle())
+                .rentalPrice(item.getRentalPrice())
+                .rentalPriceUnit(item.getRentalPriceUnit())
                 .build();
     }
 
-    private static RentalRequestResponseDTO.DisplayStatus toDisplayStatus(RentalRequest rentalRequest) {
-        if (rentalRequest.getRequestStatus() == RentalRequestStatus.REJECTED) {
-            return RentalRequestResponseDTO.DisplayStatus.REJECTED;
-        }
-        if (rentalRequest.getRequestStatus() == RentalRequestStatus.PENDING) {
-            return RentalRequestResponseDTO.DisplayStatus.PENDING;
-        }
-        return rentalRequest.getProgressStatus() == RentalProgressStatus.RETURNED
-                ? RentalRequestResponseDTO.DisplayStatus.RETURNED
-                : RentalRequestResponseDTO.DisplayStatus.RENTING;
+    public static RentalRequestResponseDTO.SeatDetail toSeatDetail(EmptySpot emptySpot){
+        return RentalRequestResponseDTO.SeatDetail.builder()
+                .location(emptySpot.getLocation())
+                .floor(emptySpot.getFloor())
+                .hasPowerOutlet(emptySpot.getHasPowerOutlet())
+                .hasWindowSeat(emptySpot.getHasWindowSeat())
+                .build();
     }
 
     public static RentalRequest toRentalRequest(Member member, Post post){
@@ -60,6 +79,35 @@ public class RentalRequestConverter {
                 .writer(writer)
                 .rentalRequest(rentalRequest)
                 .build();
+    }
 
+    public static RentalRequestResponseDTO.DecisionResult toDecisionResult(RentalRequest rentalRequest) {
+        return RentalRequestResponseDTO.DecisionResult.builder()
+                .rentalRequestStatus(rentalRequest.getRequestStatus())
+                .borrowerReturned(rentalRequest.isBorrowerReturned())
+                .ownerReturned(rentalRequest.isOwnerReturned())
+                .build();
+    }
+
+    public static RentalRequestResponseDTO.CreatedRentalRequest toCreatedRentalRequest(RentalRequest rentalRequest) {
+        return RentalRequestResponseDTO.CreatedRentalRequest.builder()
+                .rentalRequestId(rentalRequest.getId())
+                .requestStatus(rentalRequest.getRequestStatus())
+                .borrowerReturned(rentalRequest.isBorrowerReturned())
+                .ownerReturned(rentalRequest.isOwnerReturned())
+                .memberId(rentalRequest.getMember().getId())
+                .postId(rentalRequest.getPost().getId())
+                .build();
+    }
+
+    public static RentalRequestResponseDTO.CreatedReview toCreatedReview(Review review){
+        return RentalRequestResponseDTO.CreatedReview.builder()
+                .reviewId(review.getId())
+                .reviewSentiment(review.getReviewSentiment())
+                .content(review.getContent())
+                .writerId(review.getWriter().getId())
+                .receiverId(review.getReceiver().getId())
+                .rentalRequestId(review.getRentalRequest().getId())
+                .build();
     }
 }

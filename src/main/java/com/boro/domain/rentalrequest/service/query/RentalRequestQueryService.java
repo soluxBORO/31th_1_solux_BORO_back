@@ -16,15 +16,15 @@ public class RentalRequestQueryService {
 
     private final RentalRequestRepository rentalRequestRepository;
 
-    public List<RentalRequestResponseDTO.BorrowedItem> getBorrowedList(Long memberId) {
+    public List<RentalRequestResponseDTO.RentalRequestPreview> getBorrowedList(Long memberId) {
         return rentalRequestRepository.findBorrowedRequests(memberId).stream()
-                .map(RentalRequestConverter::toBorrowedItem)
+                .map(RentalRequestConverter::toRentalRequestPreview)
                 .toList();
     }
 
-    public List<RentalRequestResponseDTO.LentItem> getLentList(Long memberId) {
+    public List<RentalRequestResponseDTO.RentalRequestPreview> getLentList(Long memberId) {
         return rentalRequestRepository.findLentRequests(memberId).stream()
-                .map(RentalRequestConverter::toLentItem)
+                .map(RentalRequestConverter::toRentalRequestPreview)
                 .toList();
     }
 }

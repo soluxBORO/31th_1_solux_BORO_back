@@ -6,18 +6,19 @@ import com.boro.domain.post.dto.response.PostResponseDTO;
 import com.boro.domain.post.entity.Item;
 import com.boro.domain.post.entity.ItemImage;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.PostCategory;
 
 public class PostConverter {
 
-    public static Post toPost(Member member) {
+    public static Post toPost(Member member, PostCategory postCategory) {
         return Post.builder()
                 .member(member)
+                .postCategory(postCategory)
                 .build();
     }
 
     public static Item toItem(PostRequestDTO.CreatePost request) {
         Item item = Item.builder()
-                .category(request.category())
                 .title(request.title())
                 .description(request.description())
                 .rentalStartTime(request.rentalStartTime())
@@ -41,7 +42,6 @@ public class PostConverter {
 
     public static void updateItem(Item item, PostRequestDTO.EditPost request) {
         item.updateInfo(
-                request.category(),
                 request.title(),
                 request.description(),
                 request.rentalStartTime(),
@@ -58,7 +58,7 @@ public class PostConverter {
                 .postId(post.getId())
                 .status(post.getStatus())
                 .imageUrlList(item.getItemImages().stream().map(ItemImage::getImageUrl).toList())
-                .category(item.getCategory())
+                .category(post.getPostCategory())
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .rentalStartTime(item.getRentalStartTime())
@@ -75,7 +75,7 @@ public class PostConverter {
                 .postId(post.getId())
                 .status(post.getStatus())
                 .imageUrlList(item.getItemImages().stream().map(ItemImage::getImageUrl).toList())
-                .category(item.getCategory())
+                .category(post.getPostCategory())
                 .title(item.getTitle())
                 .description(item.getDescription())
                 .rentalStartTime(item.getRentalStartTime())
