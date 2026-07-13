@@ -27,7 +27,7 @@ public class AssetController {
     public ApiResponse<List<MemberResponseDTO.StoreAsset>> storeAssetsInfo(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ){
-        List<MemberResponseDTO.StoreAsset> storeAssets = memberQueryService.storeAssetsInfo(customUserDetails.getMemberId());
+        List<MemberResponseDTO.StoreAsset> storeAssets = memberQueryService.getStoreAssetsInfo(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(storeAssets);
     }
 

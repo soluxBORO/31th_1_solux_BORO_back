@@ -5,6 +5,7 @@ import com.boro.domain.member.converter.MemberConverter;
 import com.boro.domain.member.dto.response.MemberResponseDTO;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.repository.AssetRepository;
+import com.boro.domain.member.repository.MemberAssetRepository;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.member.repository.PointHistoryRepository;
 import com.boro.domain.rentalrequest.entity.Review;
@@ -27,6 +28,7 @@ public class MemberQueryService {
     private final PointHistoryRepository pointHistoryRepository;
     private final ReviewRepository reviewRepository;
     private final AssetRepository assetRepository;
+    private final MemberAssetRepository memberAssetRepository;
 
     public Member findById(Long memberId){
         return memberRepository.findById(memberId)
@@ -75,10 +77,18 @@ public class MemberQueryService {
         }
     }
 
-    public List<MemberResponseDTO.StoreAsset> storeAssetsInfo(Long memberId){
+    public List<MemberResponseDTO.StoreAsset> getStoreAssetsInfo(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        return AssetConverter.toStoreAssetList(assetRepository.findByMember(member));
+        return AssetConverter.toStoreAssetList(assetRepository.findAll());
+    }
+
+    public List<MemberResponseDTO.MemberAsset> getMemberAssetsInfo(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        return memberAssetRepository.findByMember(member).stream()
+                .map(MemberConverter::toMemberAsset)
+                .toList();
     }
 
 }
