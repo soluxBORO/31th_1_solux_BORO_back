@@ -57,17 +57,22 @@ public class PostController {
     @Operation(summary = "물품 게시글 리스트 조회 API", description = "전체 물품 대여 게시글을 카드형 리스트로 조회하는 API")
     @GetMapping
     public ApiResponse<List<PostResponseDTO.PostSummary>> getPostList(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam(required = false) PostCategory category,
             @RequestParam(defaultValue = "false") boolean onlyAvailable
     ) {
-        List<PostResponseDTO.PostSummary> response = postQueryService.getPostList(category, onlyAvailable);
+        List<PostResponseDTO.PostSummary> response =
+                postQueryService.getPostList(category, onlyAvailable, customUserDetails.getMemberId());
         return ApiResponse.onSuccess(response);
     }
 
     @Operation(summary = "물품 게시글 상세 조회 API", description = "물품 대여 게시글의 상세 정보를 조회하는 API")
     @GetMapping("/{postId}")
-    public ApiResponse<PostResponseDTO.PostDetail> getPostDetail(@PathVariable Long postId) {
-        PostResponseDTO.PostDetail response = postQueryService.getPostDetail(postId);
+    public ApiResponse<PostResponseDTO.PostDetail> getPostDetail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long postId
+    ) {
+        PostResponseDTO.PostDetail response = postQueryService.getPostDetail(postId, customUserDetails.getMemberId());
         return ApiResponse.onSuccess(response);
     }
 
@@ -79,5 +84,15 @@ public class PostController {
     ) {
         postCommandService.deletePost(customUserDetails.getMemberId(), postId);
         return ApiResponse.onSuccess(null);
+    }
+
+    @Operation(summary = "물품 게시글 좋아요 토글 API", description = "게시글에 좋아요를 누르거나 취소하는 API")
+    @PostMapping("/{postId}/like")
+    public ApiResponse<PostResponseDTO.LikeResult> toggleLike(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long postId
+    ) {
+        PostResponseDTO.LikeResult response = postCommandService.toggleLike(customUserDetails.getMemberId(), postId);
+        return ApiResponse.onSuccess(response);
     }
 }

@@ -7,6 +7,8 @@ import com.boro.domain.post.dto.request.PostRequestDTO;
 import com.boro.domain.post.dto.response.PostResponseDTO;
 import com.boro.domain.post.entity.Item;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.PostLike;
+import com.boro.domain.post.repository.PostLikeRepository;
 import com.boro.domain.post.repository.PostRepository;
 import com.boro.global.error.code.status.MemberErrorCode;
 import com.boro.global.error.code.status.PostErrorCode;
@@ -23,6 +25,7 @@ public class PostCommandService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public PostResponseDTO.CreatePost createPost(Long memberId, PostRequestDTO.CreatePost request) {
         if (request.rentalEndTime().isBefore(request.rentalStartTime())) {
@@ -65,5 +68,28 @@ public class PostCommandService {
         }
 
         post.markAsDeleted();
+    }
+
+    public PostResponseDTO.LikeResult toggleLike(Long memberId, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        boolean liked = postLikeRepository.findByPostAndMember(post, member)
+                .map(existingLike -> {
+                    postLikeRepository.delete(existingLike);
+                    return false;
+                })
+                .orElseGet(() -> {
+                    postLikeRepository.save(PostLike.builder().post(post).member(member).build());
+                    return true;
+                });
+
+        long likeCount = postLikeRepository.countByPost(post);
+        return PostResponseDTO.LikeResult.builder()
+                .liked(liked)
+                .likeCount(likeCount)
+                .build();
     }
 }
