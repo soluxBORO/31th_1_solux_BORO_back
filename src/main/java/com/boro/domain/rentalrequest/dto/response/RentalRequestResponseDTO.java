@@ -1,33 +1,48 @@
 package com.boro.domain.rentalrequest.dto.response;
 
+import com.boro.domain.post.entity.enums.PostCategory;
+import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record RentalRequestResponseDTO() {
 
-    public enum DisplayStatus {
-        PENDING, RENTING, RETURNED, REJECTED
+    @Builder
+    public record RentalRequestPreview(
+            Long rentalRequestId,
+            Long postId,
+            String imageUrl,
+            RentalRequestStatus rentalRequestStatus,
+            PostCategory postCategory,
+            String ownerNickname,
+            LocalDateTime createdAt,
+
+            ItemDetail itemDetail,
+            SeatDetail seatDetail
+    ){}
+
+    @Builder
+    public record ItemDetail(
+            String title,
+            LocalDate rentalStartTime,
+            LocalDate rentalEndTime,
+            Integer rentalPrice,
+            RentalPriceUnit rentalPriceUnit
+    ) {
     }
 
     @Builder
-    public record BorrowedItem(
-            DisplayStatus requestStatus,
-            LocalDate rentalStartTime,
-            String lender,
-            String title
-    ) {}
-
-    @Builder
-    public record LentItem(
-            DisplayStatus requestStatus,
-            LocalDate rentalStartTime,
-            LocalDate rentalEndTime,
-            String borrower,
-            String title
-    ) {}
+    public record SeatDetail(
+            String location,
+            Integer floor,
+            Boolean hasPowerOutlet,
+            Boolean hasWindowSeat
+    ) {
+    }
 
     @Builder
     public record DecisionResult(
