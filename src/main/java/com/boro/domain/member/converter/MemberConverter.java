@@ -6,6 +6,9 @@ import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
 import com.boro.domain.member.entity.enums.PointReason;
+import com.boro.domain.post.entity.Item;
+import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.PostLike;
 import com.boro.domain.rentalrequest.entity.Review;
 
 import java.util.List;
@@ -64,6 +67,20 @@ public class MemberConverter {
                 .itemName(asset.getName())
                 .itemCategory(asset.getAssetCategory())
                 .equipped(memberAsset.isEquipped())
+                .build();
+    }
+
+    public static MemberResponseDTO.MemberLikePost toMemberLikePost(PostLike postLike){
+        Post post = postLike.getPost();
+        Item item = post.getItem();
+        return MemberResponseDTO.MemberLikePost.builder()
+                .profileImageUrl(post.getMember().getProfileUrl())
+                .postTitle(item.getTitle())
+                .postDescription(item.getDescription())
+                .requestCreatedAt(post.getCreatedAt().toLocalDate())
+                .price(item.getRentalPrice())
+                .priceUnit(item.getRentalPriceUnit())
+                .likeCount(post.getPostLikeList().size())
                 .build();
     }
 }

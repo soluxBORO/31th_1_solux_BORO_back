@@ -18,6 +18,7 @@ public class PostLike extends BaseEntity {
     @Column(name = "post_like_id")
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;

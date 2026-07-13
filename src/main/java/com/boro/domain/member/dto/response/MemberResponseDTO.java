@@ -1,6 +1,7 @@
 package com.boro.domain.member.dto.response;
 
 import com.boro.domain.member.entity.enums.AssetCategory;
+import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -55,5 +56,17 @@ public record MemberResponseDTO() {
             String itemName,
             AssetCategory itemCategory,
             boolean equipped
+    ){}
+
+    @Builder
+    public record MemberLikePost(
+            String profileImageUrl,
+            String postTitle,
+            String postDescription,
+            LocalDate requestCreatedAt,
+            String postMemberNickname,
+            int price,
+            RentalPriceUnit priceUnit,
+            int likeCount
     ){}
 }

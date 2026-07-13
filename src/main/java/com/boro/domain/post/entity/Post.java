@@ -7,6 +7,9 @@ import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,6 +40,10 @@ public class Post extends BaseEntity {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private EmptySpot emptySpot;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikeList = new ArrayList<>();
+
     public void updatePostCategory(PostCategory postCategory){
         this.postCategory = postCategory;
     }
@@ -61,5 +68,10 @@ public class Post extends BaseEntity {
 
     public void reopen() {
         this.status = PostStatus.ACTIVE;
+    }
+
+    public void addPostLike(PostLike postLike){
+        postLikeList.add(postLike);
+        postLike.setPost(this);
     }
 }
