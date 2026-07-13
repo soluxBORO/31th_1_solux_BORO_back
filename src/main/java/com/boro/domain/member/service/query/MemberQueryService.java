@@ -1,8 +1,10 @@
 package com.boro.domain.member.service.query;
 
+import com.boro.domain.member.converter.AssetConverter;
 import com.boro.domain.member.converter.MemberConverter;
 import com.boro.domain.member.dto.response.MemberResponseDTO;
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.member.repository.AssetRepository;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.member.repository.PointHistoryRepository;
 import com.boro.domain.rentalrequest.entity.Review;
@@ -24,6 +26,7 @@ public class MemberQueryService {
     private final MemberRepository memberRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final ReviewRepository reviewRepository;
+    private final AssetRepository assetRepository;
 
     public Member findById(Long memberId){
         return memberRepository.findById(memberId)
@@ -70,6 +73,12 @@ public class MemberQueryService {
             Integer likeCnt = reviewRepository.countByWriterAndReviewSentiment(writer, ReviewSentiment.GOOD);
             return MemberConverter.toReview(likeCnt, reviewList.size(), reviewList, writer);
         }
+    }
+
+    public List<MemberResponseDTO.StoreAsset> storeAssetsInfo(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        return AssetConverter.toStoreAssetList(assetRepository.findByMember(member));
     }
 
 }
