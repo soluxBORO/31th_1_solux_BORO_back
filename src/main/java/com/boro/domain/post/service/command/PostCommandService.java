@@ -32,7 +32,7 @@ public class PostCommandService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        Post post = PostConverter.toPost(member);
+        Post post = PostConverter.toPost(member, request.category());
         Item item = PostConverter.toItem(request);
         post.assignItem(item);
 
@@ -53,6 +53,7 @@ public class PostCommandService {
         }
 
         PostConverter.updateItem(post.getItem(), request);
+        post.updatePostCategory(request.category());
     }
 
     public void deletePost(Long memberId, Long postId) {

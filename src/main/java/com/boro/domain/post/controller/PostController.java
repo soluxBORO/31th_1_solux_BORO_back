@@ -2,7 +2,7 @@ package com.boro.domain.post.controller;
 
 import com.boro.domain.post.dto.request.PostRequestDTO;
 import com.boro.domain.post.dto.response.PostResponseDTO;
-import com.boro.domain.post.entity.enums.ItemCategory;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.service.command.PostCommandService;
 import com.boro.domain.post.service.query.PostQueryService;
 import com.boro.global.error.ApiResponse;
@@ -57,7 +57,7 @@ public class PostController {
     @Operation(summary = "물품 게시글 리스트 조회 API", description = "전체 물품 대여 게시글을 카드형 리스트로 조회하는 API")
     @GetMapping
     public ApiResponse<List<PostResponseDTO.PostSummary>> getPostList(
-            @RequestParam(required = false) ItemCategory category,
+            @RequestParam(required = false) PostCategory category,
             @RequestParam(defaultValue = "false") boolean onlyAvailable
     ) {
         List<PostResponseDTO.PostSummary> response = postQueryService.getPostList(category, onlyAvailable);

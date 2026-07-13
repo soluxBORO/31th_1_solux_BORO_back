@@ -1,6 +1,6 @@
 package com.boro.domain.post.dto.response;
 
-import com.boro.domain.post.entity.enums.ItemCategory;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.entity.enums.PostStatus;
 import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public record PostResponseDTO() {
             Long postId,
             PostStatus status,
             List<String> imageUrlList,
-            ItemCategory category,
+            PostCategory category,
             String title,
             String description,
             LocalDate rentalStartTime,
@@ -35,7 +35,7 @@ public record PostResponseDTO() {
             Long postId,
             PostStatus status,
             List<String> imageUrlList,
-            ItemCategory category,
+            PostCategory category,
             String title,
             String description,
             LocalDate rentalStartTime,
