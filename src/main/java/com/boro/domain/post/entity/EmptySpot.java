@@ -35,4 +35,14 @@ public class EmptySpot extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false, unique = true)
     private Post post;
+
+    public void updateInfo(String location, Integer floor, Integer seatNumber,
+                            Boolean hasPowerOutlet, Boolean hasWindowSeat, LocalDateTime expectedCheckoutTime) {
+        this.location = location;
+        this.floor = floor;
+        this.seatNumber = seatNumber;
+        this.hasPowerOutlet = hasPowerOutlet;
+        this.hasWindowSeat = hasWindowSeat;
+        this.expectedCheckoutTime = expectedCheckoutTime;
+    }
 }
