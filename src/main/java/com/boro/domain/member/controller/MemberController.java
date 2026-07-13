@@ -90,4 +90,24 @@ public class MemberController {
         MemberResponseDTO.Review receivedReviews = memberQueryService.getReceivedReviews(reviewSentiment, customUserDetails.getMemberId());
         return ApiResponse.onSuccess(receivedReviews);
     }
+
+    @Operation(summary = "내가 보유한 캐릭터 아이템 조회 API", description = "내가 보유한 캐릭터 아이템 조회하는 API")
+    @GetMapping("/assets")
+    public ApiResponse<List<MemberResponseDTO.MemberAsset>> getMemberAssets(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ){
+        List<MemberResponseDTO.MemberAsset> memberAssetsInfo = memberQueryService.getMemberAssetsInfo(customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(memberAssetsInfo);
+    }
+
+    @Operation(summary = "꾸미기 장착/해제 API", description = "내가 보유한 캐릭터 아이템 장착/해제하는 API")
+    @GetMapping("/assets/{assetId}/equips")
+    public ApiResponse<MemberResponseDTO.MemberAsset> equipMemberAsset(
+            @PathVariable Long assetId,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+             @RequestBody @Valid MemberRequestDTO.MemberAssetEquipRequest request
+    ){
+        MemberResponseDTO.MemberAsset memberAsset = memberCommandService.equipMemberAsset(customUserDetails.getMemberId(), assetId, request);
+        return ApiResponse.onSuccess(memberAsset);
+    }
 }

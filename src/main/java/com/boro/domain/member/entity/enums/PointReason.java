@@ -17,7 +17,9 @@ public enum PointReason {
     BAD_REVIEW("거래 완료 후 '별로였어요' 후기 받음", -350, PointType.DEDUCT),
     NO_SHOW("노쇼 (약속 불이행)", -500, PointType.DEDUCT),
     ITEM_DAMAGE("물품 파손/훼손", -400, PointType.DEDUCT),
-    DELETE_FRIEND_THREE_TIMES("신고 누적 (3회)", -1000, PointType.DEDUCT);
+    DELETE_FRIEND_THREE_TIMES("신고 누적 (3회)", -1000, PointType.DEDUCT),
+
+    ITEM_PURCHASE("상점 물품 구매", 0, PointType.DEDUCT);
 
     private final String description;
     private final int point;

@@ -1,7 +1,9 @@
 package com.boro.domain.member.converter;
 
 import com.boro.domain.member.dto.response.MemberResponseDTO;
+import com.boro.domain.member.entity.Asset;
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
 import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.domain.rentalrequest.entity.Review;
@@ -53,6 +55,15 @@ public class MemberConverter {
                 .postTitle(review.getRentalRequest().getPost().getItem().getTitle())
                 .createdAt(review.getCreatedAt().toLocalDate())
                 .content(review.getContent())
+                .build();
+    }
+
+    public static MemberResponseDTO.MemberAsset toMemberAsset(MemberAsset memberAsset){
+        Asset asset = memberAsset.getAsset();
+        return MemberResponseDTO.MemberAsset.builder()
+                .itemName(asset.getName())
+                .itemCategory(asset.getAssetCategory())
+                .equipped(memberAsset.getEquipped())
                 .build();
     }
 }

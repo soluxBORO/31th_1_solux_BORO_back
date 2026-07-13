@@ -49,4 +49,11 @@ public record MemberResponseDTO() {
     public record CreatedAsset(
             Long assetId
     ){}
+
+    @Builder
+    public record MemberAsset(
+            String itemName,
+            AssetCategory itemCategory,
+            boolean equipped
+    ){}
 }

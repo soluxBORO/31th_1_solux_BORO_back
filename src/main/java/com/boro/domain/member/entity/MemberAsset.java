@@ -17,7 +17,7 @@ public class MemberAsset extends BaseEntity {
     private Long id;
 
     @Builder.Default
-    private Boolean equipped = false;
+    private boolean equipped = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -26,4 +26,8 @@ public class MemberAsset extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asset_id")
     private Asset asset;
+
+    public void updateEquippedStatus(boolean equipped){
+        this.equipped = equipped;
+    }
 }

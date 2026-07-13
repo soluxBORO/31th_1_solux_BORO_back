@@ -51,9 +51,29 @@ public class MemberCommandService {
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.ASSET_NOT_FOUND));
+
+        int price = asset.getPrice();
+        if (member.getPoint() < price){
+            throw new MemberException(MemberErrorCode.INSUFFICIENT_POINT);
+        }
+        member.applyPoint(-price);
+        PointHistory pointHistory = MemberConverter.toPointHistory(PointReason.ITEM_PURCHASE);
+        member.addPointHistory(pointHistory);
+
         MemberAsset memberAsset = AssetConverter.toMemberAsset(member, asset);
         MemberAsset savedMemberAsset = memberAssetRepository.save(memberAsset);
         return AssetConverter.toCreatedAsset(savedMemberAsset.getAsset());
+    }
+
+    public MemberResponseDTO.MemberAsset equipMemberAsset(Long memberId, Long assetId, MemberRequestDTO.MemberAssetEquipRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Asset asset = assetRepository.findById(assetId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.ASSET_NOT_FOUND));
+        MemberAsset memberAsset = memberAssetRepository.findByMemberAndAsset(member, asset)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ASSET_NOT_FOUND));
+        memberAsset.updateEquippedStatus(request.equipped());
+        return MemberConverter.toMemberAsset(memberAsset);
     }
 
 }
