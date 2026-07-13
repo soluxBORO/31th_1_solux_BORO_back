@@ -25,21 +25,19 @@ public class RentalRequestController {
 
     @Operation(summary = "빌린 물품 대여 현황 조회 API", description = "내가 빌린 물품들의 대여 현황을 조회하는 API")
     @GetMapping("/borrowed")
-    public ApiResponse<List<RentalRequestResponseDTO.BorrowedItem>> getBorrowedList(
+    public ApiResponse<List<RentalRequestResponseDTO.RentalRequestPreview>> getBorrowedList(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        List<RentalRequestResponseDTO.BorrowedItem> response =
-                rentalRequestQueryService.getBorrowedList(customUserDetails.getMemberId());
+        List<RentalRequestResponseDTO.RentalRequestPreview> response = rentalRequestQueryService.getBorrowedList(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(response);
     }
 
     @Operation(summary = "빌려준 물품 대여 현황 조회 API", description = "내가 빌려준 물품들의 대여 현황을 조회하는 API")
     @GetMapping("/lent")
-    public ApiResponse<List<RentalRequestResponseDTO.LentItem>> getLentList(
+    public ApiResponse<List<RentalRequestResponseDTO.RentalRequestPreview>> getLentList(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        List<RentalRequestResponseDTO.LentItem> response =
-                rentalRequestQueryService.getLentList(customUserDetails.getMemberId());
+        List<RentalRequestResponseDTO.RentalRequestPreview> response = rentalRequestQueryService.getLentList(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(response);
     }
 
