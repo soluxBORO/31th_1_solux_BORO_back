@@ -22,6 +22,6 @@ public class Asset extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AssetCategory assetCategory;
 
-    private Integer price;
+    private int price;
 
 }
