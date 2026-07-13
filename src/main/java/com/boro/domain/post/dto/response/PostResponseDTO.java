@@ -27,7 +27,9 @@ public record PostResponseDTO() {
             LocalDate rentalEndTime,
             Integer rentalPrice,
             RentalPriceUnit rentalPriceUnit,
-            String authorNickname
+            String authorNickname,
+            long likeCount,
+            boolean liked
     ) {}
 
     @Builder
@@ -42,6 +44,14 @@ public record PostResponseDTO() {
             LocalDate rentalEndTime,
             Integer rentalPrice,
             RentalPriceUnit rentalPriceUnit,
-            String authorNickname
+            String authorNickname,
+            long likeCount,
+            boolean liked
+    ) {}
+
+    @Builder
+    public record LikeResult(
+            boolean liked,
+            long likeCount
     ) {}
 }
