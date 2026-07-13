@@ -30,9 +30,17 @@ public class Post extends BaseEntity {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Item item;
 
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private EmptySpot emptySpot;
+
     public void assignItem(Item item) {
         this.item = item;
         item.setPost(this);
+    }
+
+    public void assignEmptySpot(EmptySpot emptySpot) {
+        this.emptySpot = emptySpot;
+        emptySpot.setPost(this);
     }
 
     public void markAsDeleted() {
