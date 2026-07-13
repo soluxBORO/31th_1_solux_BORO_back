@@ -52,7 +52,7 @@ public class PostConverter {
         item.updateImages(request.imageUrlList());
     }
 
-    public static PostResponseDTO.PostSummary toPostSummary(Post post) {
+    public static PostResponseDTO.PostSummary toPostSummary(Post post, long likeCount, boolean liked) {
         Item item = post.getItem();
         return PostResponseDTO.PostSummary.builder()
                 .postId(post.getId())
@@ -66,10 +66,12 @@ public class PostConverter {
                 .rentalPrice(item.getRentalPrice())
                 .rentalPriceUnit(item.getRentalPriceUnit())
                 .authorNickname(post.getMember().getNickname())
+                .likeCount(likeCount)
+                .liked(liked)
                 .build();
     }
 
-    public static PostResponseDTO.PostDetail toPostDetail(Post post) {
+    public static PostResponseDTO.PostDetail toPostDetail(Post post, long likeCount, boolean liked) {
         Item item = post.getItem();
         return PostResponseDTO.PostDetail.builder()
                 .postId(post.getId())
@@ -83,6 +85,8 @@ public class PostConverter {
                 .rentalPrice(item.getRentalPrice())
                 .rentalPriceUnit(item.getRentalPriceUnit())
                 .authorNickname(post.getMember().getNickname())
+                .likeCount(likeCount)
+                .liked(liked)
                 .build();
     }
 }
