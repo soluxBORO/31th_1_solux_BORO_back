@@ -35,6 +35,11 @@ spring:
       host: ${REDIS_HOST}
       port: 6379
 
+aws:
+  s3:
+    bucket: ${S3_BUCKET_NAME:boro-app-images}
+    region: ${AWS_REGION:ap-northeast-2}
+
 cors:
   urls:
     - http://localhost:8080
