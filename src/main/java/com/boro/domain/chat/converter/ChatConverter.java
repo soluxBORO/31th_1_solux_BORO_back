@@ -10,15 +10,15 @@ import com.boro.domain.chat.entity.ChatRoom;
 import com.boro.domain.chat.entity.enums.ChatRoomType;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.PostCategory;
 
 import java.util.List;
 
 public class ChatConverter {
 
-    public static ChatRoom toChatRoom(ChatRequestDTO.ChatRoom request, Post post){
+    public static ChatRoom toChatRoom(ChatRequestDTO.ChatRoom request){
         return ChatRoom.builder()
                 .chatRoomType(request.chatRoomType())
-                .post(post)
                 .build();
     }
 
@@ -84,10 +84,18 @@ public class ChatConverter {
                 .map(ChatConverter::toChatMessageDetail)
                 .toList();
 
+        String postName;
+        Post post = chatRoom.getRentalRequest().getPost();
+        if (post.getPostCategory() == PostCategory.EMPTY_SPOTS){
+            postName = post.getEmptySpot().getLocation();
+        } else {
+            postName = post.getItem().getTitle();
+        }
+
         return ChatResponseDTO.ChatMessageList.builder()
                 .chatRoomName(opponent.getNickname())
                 // TODO: 대여 요청 엔티티와 연결 필요
-                .postName(chatRoom.getPost().getItem().getTitle())
+                .postName(postName)
                 // TODO: S3 개발 후, 고도화 필요
                 .profileUrl(opponent.getProfileUrl())
                 .chatMessageList(chatRooms)

@@ -52,7 +52,8 @@ public class AuthCommandService {
         Optional<Social> socialOptional = socialRepository.findBySocialTypeAndProviderId(
                         SocialType.GOOGLE, userInfo.providerId()
         );
-
+        // TODO: 운영 시 슬래시 해제
+//        validateEmail(userInfo.email());
         // 회원가입 이력이 있으면 로그인
         if (socialOptional.isPresent()) {
             Member member = socialOptional.get().getMember();
@@ -129,6 +130,12 @@ public class AuthCommandService {
     private void validateSignUp(String email){
         if (memberRepository.existsByEmail(email)){
             throw new MemberException(MemberErrorCode.ALREADY_EXIST_EMAIL);
+        }
+    }
+
+    private void validateEmail(String email){
+        if (!email.endsWith("@sookmyung.ac.kr")) {
+            throw new MemberException(MemberErrorCode.INVALID_SOOKMYUNG_EMAIL);
         }
     }
 }

@@ -15,12 +15,21 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     @Query("""
             SELECT rr FROM RentalRequest rr
             JOIN FETCH rr.post p
-            JOIN FETCH p.item i
-            JOIN FETCH p.member borrower
-            WHERE p.member.id = :memberId
-              AND rr.requestStatus IN (
-            com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.PENDING,
-            com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
+            LEFT JOIN FETCH p.item i
+            JOIN FETCH p.member postAuthor
+            JOIN FETCH rr.member requester
+            WHERE ((
+                p.postCategory <>
+                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+                AND postAuthor.id = :memberId
+            ) OR (
+                p.postCategory =
+                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+                AND requester.id = :memberId
+            ))
+            AND rr.requestStatus IN (
+                com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.PENDING,
+                com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
             )
             ORDER BY rr.createdAt DESC
             """)
@@ -29,10 +38,23 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     @Query("""
             SELECT rr FROM RentalRequest rr
             JOIN FETCH rr.post p
-            JOIN FETCH p.item i
-            JOIN FETCH rr.member lender
-            WHERE rr.member.id = :memberId
-            AND rr.requestStatus = com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
+            LEFT JOIN FETCH p.item i
+            JOIN FETCH p.member postAuthor
+            JOIN FETCH rr.member requester
+            WHERE ((
+                p.postCategory <>
+                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+                AND requester.id = :memberId
+                AND rr.requestStatus = com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
+            ) OR (
+                p.postCategory =
+                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+                AND postAuthor.id = :memberId
+                AND rr.requestStatus IN (
+                    com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.PENDING,
+                    com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
+                )
+            ))
             ORDER BY rr.createdAt DESC
             """)
     List<RentalRequest> findLentRequests(@Param("memberId") Long memberId);

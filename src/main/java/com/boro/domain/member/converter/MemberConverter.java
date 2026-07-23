@@ -24,16 +24,17 @@ public class MemberConverter {
                 .build();
     }
 
-    public static PointHistory toPointHistory(PointReason pointReason){
+    public static PointHistory toPointHistory(String pointName,int point){
         return PointHistory.builder()
-                .pointReason(pointReason)
+                .pointName(pointName)
+                .point(point)
                 .build();
     }
 
     public static MemberResponseDTO.PointHistory toPointHistoryDTO(PointHistory pointHistory){
         return MemberResponseDTO.PointHistory.builder()
-                .pointDescription(pointHistory.getPointReason().getDescription())
-                .point(pointHistory.getPointReason().getPoint())
+                .pointDescription(pointHistory.getPointName())
+                .point(pointHistory.getPoint())
                 .createdAt(pointHistory.getCreatedAt().toLocalDate())
                 .build();
     }
@@ -64,6 +65,7 @@ public class MemberConverter {
     public static MemberResponseDTO.MemberAsset toMemberAsset(MemberAsset memberAsset){
         Asset asset = memberAsset.getAsset();
         return MemberResponseDTO.MemberAsset.builder()
+                .itemId(asset.getId())
                 .itemName(asset.getName())
                 .itemCategory(asset.getAssetCategory())
                 .equipped(memberAsset.isEquipped())

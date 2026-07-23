@@ -2,6 +2,7 @@ package com.boro.domain.chat.entity;
 
 import com.boro.domain.chat.entity.enums.ChatRoomType;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.rentalrequest.entity.RentalRequest;
 import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,9 +34,9 @@ public class ChatRoom extends BaseEntity {
     private LocalDateTime lastMessageAt;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rental_request_id")
+    private RentalRequest rentalRequest;
 
     @Builder.Default
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)

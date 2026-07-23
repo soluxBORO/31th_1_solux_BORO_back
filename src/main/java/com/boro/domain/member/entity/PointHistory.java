@@ -1,6 +1,5 @@
 package com.boro.domain.member.entity;
 
-import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,8 +17,9 @@ public class PointHistory extends BaseEntity {
     @Column(name = "point_history_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private PointReason pointReason;
+    private String pointName;
+
+    private int point;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)

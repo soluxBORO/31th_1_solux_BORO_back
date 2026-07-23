@@ -31,9 +31,21 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
         opponent.profileUrl,
         cr.lastMessageContent,
         cr.lastMessageAt,
-        me.unreadCount
+        me.unreadCount,
+        case
+            when p.postCategory =
+                com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+            then es.location
+            else i.title
+        end
     )
     from ChatRoom cr
+    join RentalRequest rr
+        on cr.rentalRequest = rr
+    join Post p
+        on rr.post = p
+    left join p.item i
+    left join p.emptySpot es
     join ChatMember me
         on me.chatRoom = cr
     join ChatMember other

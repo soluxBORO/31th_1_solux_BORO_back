@@ -101,11 +101,11 @@ public class MemberController {
     }
 
     @Operation(summary = "꾸미기 장착/해제 API", description = "내가 보유한 캐릭터 아이템 장착/해제하는 API")
-    @GetMapping("/assets/{assetId}/equips")
+    @PatchMapping("/assets/{assetId}/equips")
     public ApiResponse<MemberResponseDTO.MemberAsset> equipMemberAsset(
             @PathVariable Long assetId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-             @RequestBody @Valid MemberRequestDTO.MemberAssetEquipRequest request
+            @RequestBody @Valid MemberRequestDTO.MemberAssetEquipRequest request
     ){
         MemberResponseDTO.MemberAsset memberAsset = memberCommandService.equipMemberAsset(customUserDetails.getMemberId(), assetId, request);
         return ApiResponse.onSuccess(memberAsset);
