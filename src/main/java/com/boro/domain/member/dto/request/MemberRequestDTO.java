@@ -2,6 +2,7 @@ package com.boro.domain.member.dto.request;
 
 import com.boro.domain.member.entity.enums.PointReason;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record MemberRequestDTO() {
 
@@ -15,8 +16,8 @@ public record MemberRequestDTO() {
     ){}
 
     public record MemberAssetEquipRequest(
-            @NotBlank
-            boolean equipped
+            @NotNull
+            Boolean equipped
     ) {
     }
 }

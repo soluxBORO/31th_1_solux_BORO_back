@@ -17,6 +17,7 @@ public class AssetConverter {
 
     public static MemberResponseDTO.StoreAsset toStoreAsset(Asset asset) {
         return MemberResponseDTO.StoreAsset.builder()
+                .itemId(asset.getId())
                 .itemName(asset.getName())
                 .itemCategory(asset.getAssetCategory())
                 .itemPrice(asset.getPrice())

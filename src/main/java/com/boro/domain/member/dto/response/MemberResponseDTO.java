@@ -41,6 +41,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record StoreAsset(
+            Long itemId,
             String itemName,
             AssetCategory itemCategory,
             Integer itemPrice
@@ -53,6 +54,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberAsset(
+            Long itemId,
             String itemName,
             AssetCategory itemCategory,
             boolean equipped

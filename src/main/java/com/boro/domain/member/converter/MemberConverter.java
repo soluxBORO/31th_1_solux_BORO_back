@@ -65,6 +65,7 @@ public class MemberConverter {
     public static MemberResponseDTO.MemberAsset toMemberAsset(MemberAsset memberAsset){
         Asset asset = memberAsset.getAsset();
         return MemberResponseDTO.MemberAsset.builder()
+                .itemId(asset.getId())
                 .itemName(asset.getName())
                 .itemCategory(asset.getAssetCategory())
                 .equipped(memberAsset.isEquipped())
