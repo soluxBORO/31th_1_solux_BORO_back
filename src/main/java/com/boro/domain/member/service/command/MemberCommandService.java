@@ -39,9 +39,9 @@ public class MemberCommandService {
     public void applyPoint(Long memberId, PointReason reason) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-
         member.applyPoint(reason.getPoint());
-        PointHistory pointHistory = MemberConverter.toPointHistory(reason);
+
+        PointHistory pointHistory = MemberConverter.toPointHistory(reason.getDescription(), reason.getPoint());
         member.addPointHistory(pointHistory);
         log.info("포인트 이벤트 발행 완료!");
     }
@@ -57,7 +57,7 @@ public class MemberCommandService {
             throw new MemberException(MemberErrorCode.INSUFFICIENT_POINT);
         }
         member.applyPoint(-price);
-        PointHistory pointHistory = MemberConverter.toPointHistory(PointReason.ITEM_PURCHASE);
+        PointHistory pointHistory = MemberConverter.toPointHistory(PointReason.ITEM_PURCHASE.getDescription(), -price);
         member.addPointHistory(pointHistory);
 
         MemberAsset memberAsset = AssetConverter.toMemberAsset(member, asset);

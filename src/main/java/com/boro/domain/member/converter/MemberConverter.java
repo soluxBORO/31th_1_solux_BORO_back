@@ -24,16 +24,17 @@ public class MemberConverter {
                 .build();
     }
 
-    public static PointHistory toPointHistory(PointReason pointReason){
+    public static PointHistory toPointHistory(String pointName,int point){
         return PointHistory.builder()
-                .pointReason(pointReason)
+                .pointName(pointName)
+                .point(point)
                 .build();
     }
 
     public static MemberResponseDTO.PointHistory toPointHistoryDTO(PointHistory pointHistory){
         return MemberResponseDTO.PointHistory.builder()
-                .pointDescription(pointHistory.getPointReason().getDescription())
-                .point(pointHistory.getPointReason().getPoint())
+                .pointDescription(pointHistory.getPointName())
+                .point(pointHistory.getPoint())
                 .createdAt(pointHistory.getCreatedAt().toLocalDate())
                 .build();
     }
