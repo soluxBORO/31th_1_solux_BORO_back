@@ -46,14 +46,13 @@ public class ChatCommandService {
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         Member owner = memberRepository.findById(post.getMember().getId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        ChatRoom chatRoom = ChatConverter.toChatRoom(request, post);
+        ChatRoom chatRoom = ChatConverter.toChatRoom(request);
 
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, member));
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, owner));
 
-        RentalRequestResponseDTO.CreatedRentalRequest rentalRequest = rentalRequestCommandService.createRentalRequest(post, member);
         chatRoomRepository.save(chatRoom);
-        return rentalRequest;
+        return rentalRequestCommandService.createRentalRequest(chatRoom, post, member);
     }
 
     public void saveChatRoomTest(Long memberId, ChatRequestDTO.ChatRoomTest request){

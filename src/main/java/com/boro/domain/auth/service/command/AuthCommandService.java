@@ -52,7 +52,8 @@ public class AuthCommandService {
         Optional<Social> socialOptional = socialRepository.findBySocialTypeAndProviderId(
                         SocialType.GOOGLE, userInfo.providerId()
         );
-        validateEmail(userInfo.email());
+        // TODO: 운영 시 슬래시 해제
+//        validateEmail(userInfo.email());
         // 회원가입 이력이 있으면 로그인
         if (socialOptional.isPresent()) {
             Member member = socialOptional.get().getMember();

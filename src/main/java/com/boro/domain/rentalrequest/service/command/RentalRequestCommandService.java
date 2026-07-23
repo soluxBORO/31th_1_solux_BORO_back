@@ -1,5 +1,6 @@
 package com.boro.domain.rentalrequest.service.command;
 
+import com.boro.domain.chat.entity.ChatRoom;
 import com.boro.domain.member.dto.request.MemberRequestDTO;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.enums.PointReason;
@@ -34,10 +35,11 @@ public class RentalRequestCommandService {
     private final ReviewRepository reviewRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public RentalRequestResponseDTO.CreatedRentalRequest createRentalRequest(Post post, Member member){
+    public RentalRequestResponseDTO.CreatedRentalRequest createRentalRequest(ChatRoom chatRoom, Post post, Member member){
         validateRentalRequest(post, member);
         RentalRequest rentalRequest = RentalRequestConverter.toRentalRequest(member, post);
         RentalRequest saved = rentalRequestRepository.save(rentalRequest);
+        chatRoom.setRentalRequest(rentalRequest);
         return RentalRequestConverter.toCreatedRentalRequest(saved);
     }
 

@@ -11,6 +11,7 @@ public record ChatRoomPreview(
         String profileUrl,
         String lastMessageContent,
         LocalDateTime lastMessageAt,
-        Integer unreadCount
+        Integer unreadCount,
+        String postTitle
 ) {
 }
