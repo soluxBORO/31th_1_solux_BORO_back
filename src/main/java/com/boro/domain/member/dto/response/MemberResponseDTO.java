@@ -77,4 +77,19 @@ public record MemberResponseDTO() {
             RentalPriceUnit priceUnit,
             int likeCount
     ){}
+
+    @Builder
+    public record MyPost(
+            PostStatus postStatus,
+            PostCategory postCategory,
+            int price,
+            RentalPriceUnit priceUnit,
+            String postTitle,
+            String postDescription,
+            LocalDate requestCreatedAt,
+            Long leftMinutes,
+            String location,
+            Integer floor,
+            Integer seatNumber
+    ){}
 }

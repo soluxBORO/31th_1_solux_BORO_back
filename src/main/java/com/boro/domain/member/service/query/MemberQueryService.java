@@ -8,7 +8,9 @@ import com.boro.domain.member.repository.AssetRepository;
 import com.boro.domain.member.repository.MemberAssetRepository;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.member.repository.PointHistoryRepository;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.repository.PostLikeRepository;
+import com.boro.domain.post.repository.PostRepository;
 import com.boro.domain.rentalrequest.entity.Review;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import com.boro.domain.rentalrequest.repository.ReviewRepository;
@@ -33,6 +35,7 @@ public class MemberQueryService {
     private final AssetRepository assetRepository;
     private final MemberAssetRepository memberAssetRepository;
     private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
 
     public Member findById(Long memberId){
         return memberRepository.findById(memberId)
@@ -104,7 +107,19 @@ public class MemberQueryService {
         return postLikeRepository.findLikedPostsWithLikeCount(memberId).stream()
                 .map(MemberConverter::toMemberLikePost)
                 .toList();
+    }
 
+    public List<MemberResponseDTO.MyPost> getMyPosts(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        return postRepository.findByMemberOrderByCreatedAtDesc(member).stream()
+                .map(post -> {
+                    if (post.getPostCategory() == PostCategory.EMPTY_SPOTS) {
+                        return MemberConverter.toMyEmptySpotPost(post);
+                    } else {
+                        return MemberConverter.toMyItemPost(post);
+                    }
+                }).toList();
     }
 
 }

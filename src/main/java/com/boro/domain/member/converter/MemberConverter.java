@@ -5,13 +5,11 @@ import com.boro.domain.member.entity.Asset;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
-import com.boro.domain.member.entity.enums.PointReason;
-import com.boro.domain.post.entity.Item;
-import com.boro.domain.post.entity.ItemImage;
-import com.boro.domain.post.entity.Post;
-import com.boro.domain.post.entity.PostLike;
+import com.boro.domain.post.entity.*;
 import com.boro.domain.rentalrequest.entity.Review;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class MemberConverter {
@@ -87,6 +85,36 @@ public class MemberConverter {
                 .price(item.getRentalPrice())
                 .priceUnit(item.getRentalPriceUnit())
                 .likeCount(post.getPostLikeList().size())
+                .build();
+    }
+
+    public static MemberResponseDTO.MyPost toMyItemPost(Post post){
+        Item item = post.getItem();
+        return MemberResponseDTO.MyPost.builder()
+                .postStatus(post.getStatus())
+                .postCategory(post.getPostCategory())
+                .price(item.getRentalPrice())
+                .priceUnit(item.getRentalPriceUnit())
+                .postTitle(item.getTitle())
+                .postDescription(item.getDescription())
+//                .requestCreatedAt(post.getCreatedAt().toLocalDate())
+                .build();
+    }
+
+    public static MemberResponseDTO.MyPost toMyEmptySpotPost(Post post){
+
+        EmptySpot emptySpot = post.getEmptySpot();
+        long leftMinutes = Math.max(0, Duration.between(
+                LocalDateTime.now(), emptySpot.getExpectedCheckoutTime()).toMinutes()
+        );
+        return MemberResponseDTO.MyPost.builder()
+                .postStatus(post.getStatus())
+                .postCategory(post.getPostCategory())
+                .location(emptySpot.getLocation())
+                .floor(emptySpot.getFloor())
+                .seatNumber(emptySpot.getSeatNumber())
+//                .requestCreatedAt(post.getCreatedAt().toLocalDate())
+                .leftMinutes(leftMinutes)
                 .build();
     }
 }

@@ -120,5 +120,11 @@ public class MemberController {
         return ApiResponse.onSuccess(likePosts);
     }
 
+    @Operation(summary = "내가 작성한 게시물 조회 API", description = "내가 작성한 게시물 조회하는 API")
+    @GetMapping("/posts")
+    public ApiResponse<List<MemberResponseDTO.MyPost>> getMyPosts(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        List<MemberResponseDTO.MyPost> myPosts = memberQueryService.getMyPosts(customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(myPosts);
+    }
 
 }
