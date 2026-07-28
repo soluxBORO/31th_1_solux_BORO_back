@@ -6,21 +6,25 @@ import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 
 import java.util.List;
+import java.util.Set;
 
 public class AssetConverter {
 
-    public static List<MemberResponseDTO.StoreAsset> toStoreAssetList(List<Asset> assetList) {
+    public static List<MemberResponseDTO.StoreAsset> toStoreAssetList(
+            List<Asset> assetList, Set<Long> ownedAssetIds
+    ) {
         return assetList.stream()
-                .map(AssetConverter::toStoreAsset)
+                .map(asset -> AssetConverter.toStoreAsset(asset, ownedAssetIds.contains(asset.getId())))
                 .toList();
     }
 
-    public static MemberResponseDTO.StoreAsset toStoreAsset(Asset asset) {
+    public static MemberResponseDTO.StoreAsset toStoreAsset(Asset asset, boolean owned) {
         return MemberResponseDTO.StoreAsset.builder()
                 .itemId(asset.getId())
                 .itemName(asset.getName())
                 .itemCategory(asset.getAssetCategory())
                 .itemPrice(asset.getPrice())
+                .owned(owned)
                 .build();
     }
 

@@ -44,7 +44,8 @@ public record MemberResponseDTO() {
             Long itemId,
             String itemName,
             AssetCategory itemCategory,
-            Integer itemPrice
+            Integer itemPrice,
+            boolean owned
     ){}
 
     @Builder

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -82,7 +84,12 @@ public class MemberQueryService {
     public List<MemberResponseDTO.StoreAsset> getStoreAssetsInfo(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        return AssetConverter.toStoreAssetList(assetRepository.findAll());
+
+        Set<Long> ownedAssetIds = memberAssetRepository.findByMember(member).stream()
+                .map(memberAsset -> memberAsset.getAsset().getId())
+                .collect(Collectors.toSet());
+
+        return AssetConverter.toStoreAssetList(assetRepository.findAll(), ownedAssetIds);
     }
 
     public List<MemberResponseDTO.MemberAsset> getMemberAssetsInfo(Long memberId){
