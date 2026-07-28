@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: boro
+          MYSQL_USER: boro
+          MYSQL_PASSWORD: boro_test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      # local 프로필 그대로 사용 - 운영과 동일한 설정으로 컨텍스트가 뜨는지 검증하기 위함.
+      # 아래 값은 전부 CI 전용 더미 값이며 실제 시크릿이 아님 (GitHub Secrets 미사용).
+      SPRING_PROFILES_ACTIVE: local
+      LOCAL_DB_URL: jdbc:mysql://127.0.0.1:3306/boro?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      LOCAL_DB_USERNAME: boro
+      LOCAL_DB_PASSWORD: boro_test_password
+      GOOGLE_CLIENT_ID: ci-dummy-google-client-id
+      GOOGLE_CLIENT_SECRET: ci-dummy-google-client-secret
+      GOOGLE_REDIRECT_URI: http://localhost:8080/login/oauth2/code/google
+      REDIS_HOST: 127.0.0.1
+      # jjwt 0.12.x는 HS256 키가 256비트(32바이트) 미만이면 빈 생성 시점에 WeakKeyException을 던지므로
+      # 더미 값도 충분히 길게 지정한다.
+      JWT_SECRET: ci-dummy-jwt-secret-key-for-github-actions-tests-only-please-do-not-use-in-prod
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - run: chmod +x gradlew
+
+      - run: ./gradlew test
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: |
+            build/reports/tests/test
+            build/test-results/test
+          retention-days: 5
