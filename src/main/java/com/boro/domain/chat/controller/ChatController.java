@@ -24,12 +24,12 @@ public class ChatController {
     private final ChatQueryService chatQueryService;
 
     @Operation(summary = "대여 요청 및 채팅방 생성 API", description = "채팅을 하는 순간 요청이 생성되는 API")
-    @PostMapping
+    @PostMapping("/{postId}")
     public ApiResponse<RentalRequestResponseDTO.CreatedRentalRequest> requestRental(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody ChatRequestDTO.ChatRoom request
+            @PathVariable Long postId
     ){
-        RentalRequestResponseDTO.CreatedRentalRequest createdRentalRequest = chatCommandService.saveChatRoom(customUserDetails.getMemberId(), request);
+        RentalRequestResponseDTO.CreatedRentalRequest createdRentalRequest = chatCommandService.saveChatRoom(customUserDetails.getMemberId(), postId);
         return ApiResponse.onSuccess(createdRentalRequest);
     }
 
