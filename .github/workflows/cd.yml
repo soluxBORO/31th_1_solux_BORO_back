@@ -122,7 +122,18 @@ jobs:
 
             docker image prune -f
 
-            sleep 10
             # No actuator/health endpoint in this app - swagger-ui is the same
             # smoke-test endpoint used for manual deploy verification so far.
-            curl -fsS http://localhost:8080/swagger-ui/index.html > /dev/null
+            # Spring context + RDS/Hibernate init has taken ~20-25s in practice,
+            # so poll with retries instead of a single fixed sleep+curl.
+            for i in $(seq 1 15); do
+              if curl -fsS http://localhost:8080/swagger-ui/index.html > /dev/null 2>&1; then
+                echo "Health check passed"
+                exit 0
+              fi
+              sleep 5
+            done
+
+            echo "Health check failed after retries - dumping container logs:"
+            docker logs boro-backend --tail 100
+            exit 1
