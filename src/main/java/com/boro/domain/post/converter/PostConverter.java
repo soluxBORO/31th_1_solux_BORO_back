@@ -68,6 +68,7 @@ public class PostConverter {
                 .authorNickname(post.getMember().getNickname())
                 .likeCount(likeCount)
                 .liked(liked)
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 
@@ -87,6 +88,7 @@ public class PostConverter {
                 .authorNickname(post.getMember().getNickname())
                 .likeCount(likeCount)
                 .liked(liked)
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 }
