@@ -1,0 +1,128 @@
+name: CD
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: cd-${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-push:
+    name: build-and-push
+    runs-on: ubuntu-latest
+    outputs:
+      image_sha: ${{ steps.vars.outputs.image_sha }}
+      image_latest: ${{ steps.vars.outputs.image_latest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute lowercase image reference
+        id: vars
+        # GHCR(OCI) image references must be all lowercase. github.repository is
+        # "soluxBORO/31th_1_solux_BORO_back" - both the owner AND the repo name
+        # contain uppercase letters, so we lowercase the whole "owner/repo" string
+        # rather than just the owner.
+        run: |
+          IMAGE_BASE=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "image_sha=${IMAGE_BASE}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          echo "image_latest=${IMAGE_BASE}:latest" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.vars.outputs.image_sha }}
+            ${{ steps.vars.outputs.image_latest }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: deploy
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          IMAGE: ${{ needs.build-and-push.outputs.image_sha }}
+          GHCR_ACTOR: ${{ github.actor }}
+          # Ephemeral Actions token, only valid for this workflow run - used to
+          # `docker login` on EC2 just long enough to pull the new image. No
+          # long-lived PAT is stored on the instance (see report for rationale).
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SPRING_PROFILES_ACTIVE: local
+          LOCAL_DB_URL: ${{ secrets.LOCAL_DB_URL }}
+          LOCAL_DB_USERNAME: ${{ secrets.LOCAL_DB_USERNAME }}
+          LOCAL_DB_PASSWORD: ${{ secrets.LOCAL_DB_PASSWORD }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: >-
+            IMAGE,GHCR_ACTOR,GHCR_TOKEN,SPRING_PROFILES_ACTIVE,
+            LOCAL_DB_URL,LOCAL_DB_USERNAME,LOCAL_DB_PASSWORD,
+            GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REDIRECT_URI,
+            REDIS_HOST,JWT_SECRET,S3_BUCKET_NAME,AWS_REGION
+          script: |
+            set -e
+
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_ACTOR" --password-stdin
+
+            docker pull "$IMAGE"
+
+            docker stop boro-backend 2>/dev/null || true
+            docker rm boro-backend 2>/dev/null || true
+
+            # ASSUMPTION: Redis currently runs as a container named `boro-redis` on
+            # a user-defined bridge network `boro-net` (both provisioned manually,
+            # not by this workflow). REDIS_HOST resolves that container name, which
+            # only works for containers joined to boro-net - so this container must
+            # join it too. The DB (LOCAL_DB_URL) points at a managed RDS endpoint,
+            # reachable directly with no network dependency. If Redis is ever moved
+            # to a managed service (ElastiCache), drop --network here.
+            docker run -d \
+              --name boro-backend \
+              --network boro-net \
+              -p 8080:8080 \
+              --restart unless-stopped \
+              -e SPRING_PROFILES_ACTIVE="$SPRING_PROFILES_ACTIVE" \
+              -e LOCAL_DB_URL="$LOCAL_DB_URL" \
+              -e LOCAL_DB_USERNAME="$LOCAL_DB_USERNAME" \
+              -e LOCAL_DB_PASSWORD="$LOCAL_DB_PASSWORD" \
+              -e GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID" \
+              -e GOOGLE_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET" \
+              -e GOOGLE_REDIRECT_URI="$GOOGLE_REDIRECT_URI" \
+              -e REDIS_HOST="$REDIS_HOST" \
+              -e JWT_SECRET="$JWT_SECRET" \
+              -e S3_BUCKET_NAME="$S3_BUCKET_NAME" \
+              -e AWS_REGION="$AWS_REGION" \
+              "$IMAGE"
+
+            docker image prune -f
+
+            sleep 10
+            # No actuator/health endpoint in this app - swagger-ui is the same
+            # smoke-test endpoint used for manual deploy verification so far.
+            curl -fsS http://localhost:8080/swagger-ui/index.html > /dev/null
