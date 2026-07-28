@@ -53,4 +53,22 @@ public class ChatResponseDTO {
         List<com.boro.domain.chat.dto.response.ChatRoomPreview> chatRoomList
     ){}
 
+    @Builder
+    public record ChatRoomUpdate(
+            Long memberId,
+            Long chatRoomId,
+            String lastMessageContent,
+            LocalDateTime lastMessageAt,
+            Long unreadCount
+    ){}
+
+    @Builder
+    public record ChatMessageSentEvent(
+            Long chatRoomId,
+            Long messageId,
+            Long senderId,
+            Long receiverId,
+            String content,
+            LocalDateTime createdAt
+    ){}
 }

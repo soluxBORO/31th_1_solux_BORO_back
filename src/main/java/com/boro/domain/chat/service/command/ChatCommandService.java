@@ -3,10 +3,12 @@ package com.boro.domain.chat.service.command;
 import com.boro.domain.chat.converter.ChatConverter;
 import com.boro.domain.chat.dto.request.ChatRequestDTO;
 import com.boro.domain.chat.dto.response.ChatResponseDTO;
+import com.boro.domain.chat.entity.ChatMember;
 import com.boro.domain.chat.entity.ChatMessage;
 import com.boro.domain.chat.entity.ChatMessageImage;
 import com.boro.domain.chat.entity.ChatRoom;
 import com.boro.domain.chat.entity.enums.ChatMessageType;
+import com.boro.domain.chat.repository.ChatMemberRepository;
 import com.boro.domain.chat.repository.ChatMessageRepository;
 import com.boro.domain.chat.repository.ChatRoomRepository;
 import com.boro.domain.member.entity.Member;
@@ -23,6 +25,7 @@ import com.boro.global.error.exception.handler.MemberException;
 import com.boro.global.error.exception.handler.PostException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,8 @@ public class ChatCommandService {
     private final MemberRepository memberRepository;
     private final RentalRequestCommandService rentalRequestCommandService;
     private final PostRepository postRepository;
+    private final ChatMemberRepository chatMemberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     // TODO: 요청 게시물과 연결 필요
     public RentalRequestResponseDTO.CreatedRentalRequest saveChatRoom(Long memberId, ChatRequestDTO.ChatRoom request){
@@ -90,10 +95,18 @@ public class ChatCommandService {
                         chatMessage.addChatMessageImage(chatMessageImage);
                     });
         }
-
         chatMessageRepository.save(chatMessage);
         chatRoom.updateLastMessageContent(chatMessage.getContent(), chatMessage.getCreatedAt());
+        eventPublisher.publishEvent(ChatConverter.toChatMessageSentEvent(chatMessage, memberId));
         return ChatConverter.toChatMessageDTO(chatMessage);
+    }
+
+    public void readChatRoom(Long chatRoomId, Long memberId){
+        log.info("채팅방 읽음 처리: chatRoomId={}, memberId={}", chatRoomId, memberId);
+        ChatMember chatMember = chatMemberRepository.findByChatRoom_IdAndMember_Id(chatRoomId, memberId)
+                .orElseThrow(() -> new ChatException(ChatErrorCode.CHAT_MEMBER_NOT_FOUND));
+        chatMessageRepository.findTopByChatRoomIdOrderByIdDesc(chatRoomId)
+                .ifPresent(chatMember::updateLastReadMessage);
     }
 
 

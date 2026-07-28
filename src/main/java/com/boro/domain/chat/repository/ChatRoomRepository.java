@@ -31,7 +31,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
         opponent.profileUrl,
         cr.lastMessageContent,
         cr.lastMessageAt,
-        me.unreadCount,
+        count(unreadMessage.id),
         case
             when p.postCategory =
                 com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
@@ -52,9 +52,22 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
         on other.chatRoom = cr
     join Member opponent
         on opponent = other.member
+    left join ChatMessage unreadMessage
+        on unreadMessage.chatRoom = cr
+        and unreadMessage.id > coalesce(me.lastReadMessage.id, 0)
+        and unreadMessage.member.id <> :memberId
     where me.member.id = :memberId
       and other.member.id <> :memberId
       and cr.chatRoomType = :chatRoomType
+    group by
+        cr.id,
+        opponent.nickname,
+        opponent.profileUrl,
+        cr.lastMessageContent,
+        cr.lastMessageAt,
+        p.postCategory,
+        es.location,
+        i.title
     order by cr.lastMessageAt desc
     """)
     List<ChatRoomPreview> findChatRoomList(

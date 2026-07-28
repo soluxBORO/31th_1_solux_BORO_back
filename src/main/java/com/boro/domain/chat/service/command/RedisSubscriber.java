@@ -29,4 +29,15 @@ public class RedisSubscriber {
             log.error("Exception {}", e);
         }
     }
+
+    public void handleChatRoomUpdate(ChatResponseDTO.ChatRoomUpdate message){
+        try {
+            log.info("Redis Subscriber: {}", message);
+            messagingTemplate.convertAndSendToUser(
+                    message.memberId().toString(), "/queue/unread", message
+            );
+        } catch (Exception e){
+            log.error("Exception {}", e);
+        }
+    }
 }

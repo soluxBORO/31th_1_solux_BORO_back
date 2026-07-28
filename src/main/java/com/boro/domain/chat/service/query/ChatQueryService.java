@@ -55,4 +55,7 @@ public class ChatQueryService {
         return ChatConverter.toChatMessageList(chatRoom, chatMessageList, opponent);
     }
 
+    public long countUnreadMessages(Long roomId, Long memberId){
+        return chatMessageRepository.countUnreadMessages(roomId, memberId);
+    }
 }
