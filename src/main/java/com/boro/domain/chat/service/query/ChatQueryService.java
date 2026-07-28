@@ -36,7 +36,13 @@ public class ChatQueryService {
     public ChatResponseDTO.ChatRoomList getChatRoomList(Long memberId, ChatRoomType chatRoomType){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        List<ChatRoomPreview> chatRoomList = chatRoomRepository.findChatRoomList(memberId, chatRoomType);
+        List<ChatRoomPreview> chatRoomList = null;
+        if (chatRoomType == ChatRoomType.ITEM){
+            chatRoomList = chatRoomRepository.findItemChatRoomList(memberId);
+        } else if (chatRoomType == ChatRoomType.EMPTY_SPOT){
+            chatRoomList = chatRoomRepository.findEmptySpotChatRoomList(memberId);
+        }
+
         return ChatConverter.toChatRoomPreviewList(chatRoomType, chatRoomList);
     }
 
