@@ -5,8 +5,6 @@ import com.boro.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -20,9 +18,10 @@ public class ChatMember extends BaseEntity {
     @Column(name = "chat_member_id")
     private Long id;
 
-    private LocalDateTime lastReadAt;
-
-    private Integer unreadCount;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_message_id")
+    private ChatMessage lastReadMessage;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,5 +33,12 @@ public class ChatMember extends BaseEntity {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+
+    public void updateLastReadMessage(ChatMessage latestMessage) {
+        if (lastReadMessage == null ||
+                latestMessage.getId() > lastReadMessage.getId()) {
+            this.lastReadMessage = latestMessage;
+        }
+    }
 
 }

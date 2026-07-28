@@ -63,4 +63,14 @@ public class ChatController {
         return ApiResponse.onSuccess(chatRoomDetail);
     }
 
+    @Operation(summary = "채팅방 읽음 처리 API", description = "채팅방 상세 조회시 읽음 처리하는 API")
+    @PatchMapping("/{chatRoomId}/read")
+    public ApiResponse<Void> readChatRoom(
+            @PathVariable Long chatRoomId,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ){
+        chatCommandService.readChatRoom(chatRoomId, customUserDetails.getMemberId());
+        return ApiResponse.onSuccess(null);
+    }
+
 }

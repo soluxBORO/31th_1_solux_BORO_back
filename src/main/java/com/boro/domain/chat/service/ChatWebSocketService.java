@@ -20,7 +20,7 @@ public class ChatWebSocketService {
 
     public ChatResponseDTO.ChatMessage sendMessage(Long memberId, Long roomId, ChatRequestDTO.ChatMessage request){
         ChatResponseDTO.ChatMessage message = chatCommandService.saveMessage(memberId, roomId, request);
-        redisPublisher.publish(message);
+        redisPublisher.publishChatMessage(message);
         return message;
     }
 }

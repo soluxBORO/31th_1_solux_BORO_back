@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 @Tag(name = "채팅 API")
 public class ChatWebSocketController {
     private final ChatWebSocketService chatWebSocketService;
+    private static final String AUTHENTICATED_MEMBER_ID = "AUTHENTICATED_MEMBER_ID";
 
     @MessageMapping("/chat/{roomId}")
     public void sendMessage(
@@ -25,7 +26,7 @@ public class ChatWebSocketController {
             SimpMessageHeaderAccessor accessor
     ){
         log.info("===== Controller sendMessage 진입 =====");
-        Long memberId = Long.parseLong(accessor.getSessionAttributes().get("AUTHENTICATED_MEMBER_ID").toString());
+        Long memberId = Long.parseLong(accessor.getSessionAttributes().get(AUTHENTICATED_MEMBER_ID).toString());
         log.info("roomId: {}", roomId);
         chatWebSocketService.sendMessage(memberId, roomId, request);
     }
