@@ -6,6 +6,7 @@ import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record PostResponseDTO() {
@@ -29,7 +30,8 @@ public record PostResponseDTO() {
             RentalPriceUnit rentalPriceUnit,
             String authorNickname,
             long likeCount,
-            boolean liked
+            boolean liked,
+            LocalDateTime createdAt
     ) {}
 
     @Builder
@@ -46,7 +48,8 @@ public record PostResponseDTO() {
             RentalPriceUnit rentalPriceUnit,
             String authorNickname,
             long likeCount,
-            boolean liked
+            boolean liked,
+            LocalDateTime createdAt
     ) {}
 
     @Builder

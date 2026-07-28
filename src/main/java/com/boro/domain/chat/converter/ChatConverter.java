@@ -12,6 +12,7 @@ import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.entity.enums.PostCategory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ChatConverter {
@@ -129,6 +130,31 @@ public class ChatConverter {
         return ChatResponseDTO.ChatRoomList.builder()
                 .chatRoomType(chatRoomType)
                 .chatRoomList(chatRoomList)
+                .build();
+    }
+
+    public static ChatResponseDTO.ChatRoomUpdate toChatRoomUpdate(
+        Long memberId, Long chatRoomId, String lastMessageContent, LocalDateTime lastMessageAt, Long unreadCount, Boolean isViewing
+    ){
+        return ChatResponseDTO.ChatRoomUpdate.builder()
+                .memberId(memberId)
+                .chatRoomId(chatRoomId)
+                .lastMessageContent(lastMessageContent)
+                .lastMessageAt(lastMessageAt)
+                .unreadCount(isViewing? 0L : unreadCount)
+                .build();
+    }
+
+    public static ChatResponseDTO.ChatMessageSentEvent toChatMessageSentEvent(
+            ChatMessage chatMessage, Long receiverId
+    ){
+        return ChatResponseDTO.ChatMessageSentEvent.builder()
+                .chatRoomId(chatMessage.getChatRoom().getId())
+                .messageId(chatMessage.getId())
+                .senderId(chatMessage.getMember().getId())
+                .receiverId(receiverId)
+                .content(chatMessage.getContent())
+                .createdAt(chatMessage.getCreatedAt())
                 .build();
     }
 
