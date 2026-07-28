@@ -1,6 +1,8 @@
 package com.boro.domain.member.dto.response;
 
 import com.boro.domain.member.entity.enums.AssetCategory;
+import com.boro.domain.post.entity.enums.PostCategory;
+import com.boro.domain.post.entity.enums.PostStatus;
 import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import lombok.Builder;
 
@@ -63,10 +65,13 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberLikePost(
-            String profileImageUrl,
+            String postImageUrl,
+            PostCategory postCategory,
+            PostStatus postStatus,
             String postTitle,
             String postDescription,
             LocalDate requestCreatedAt,
+            String profileImageUrl,
             String postMemberNickname,
             int price,
             RentalPriceUnit priceUnit,

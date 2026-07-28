@@ -119,4 +119,6 @@ public class MemberController {
         List<MemberResponseDTO.MemberLikePost> likePosts = memberQueryService.getLikePosts(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(likePosts);
     }
+
+
 }

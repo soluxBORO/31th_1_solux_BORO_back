@@ -7,6 +7,7 @@ import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
 import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.domain.post.entity.Item;
+import com.boro.domain.post.entity.ItemImage;
 import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.entity.PostLike;
 import com.boro.domain.rentalrequest.entity.Review;
@@ -76,10 +77,13 @@ public class MemberConverter {
         Post post = postLike.getPost();
         Item item = post.getItem();
         return MemberResponseDTO.MemberLikePost.builder()
-                .profileImageUrl(post.getMember().getProfileUrl())
+                .postImageUrl(item.getItemImages().stream().findFirst() .map(ItemImage::getImageUrl).orElse(null))
+                .postCategory(post.getPostCategory())
+                .postStatus(post.getStatus())
                 .postTitle(item.getTitle())
                 .postDescription(item.getDescription())
                 .requestCreatedAt(post.getCreatedAt().toLocalDate())
+                .profileImageUrl(post.getMember().getProfileUrl())
                 .price(item.getRentalPrice())
                 .priceUnit(item.getRentalPriceUnit())
                 .likeCount(post.getPostLikeList().size())
