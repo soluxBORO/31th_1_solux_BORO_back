@@ -81,6 +81,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MyPost(
+            Long postId,
             PostStatus postStatus,
             PostCategory postCategory,
             int price,

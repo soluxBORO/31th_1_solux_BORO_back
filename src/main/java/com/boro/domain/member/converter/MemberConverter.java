@@ -93,6 +93,7 @@ public class MemberConverter {
     public static MemberResponseDTO.MyPost toMyItemPost(Post post){
         Item item = post.getItem();
         return MemberResponseDTO.MyPost.builder()
+                .postId(post.getId())
                 .postStatus(post.getStatus())
                 .postCategory(post.getPostCategory())
                 .price(item.getRentalPrice())
@@ -110,6 +111,7 @@ public class MemberConverter {
                 LocalDateTime.now(), emptySpot.getExpectedCheckoutTime()).toMinutes()
         );
         return MemberResponseDTO.MyPost.builder()
+                .postId(post.getId())
                 .postStatus(post.getStatus())
                 .postCategory(post.getPostCategory())
                 .location(emptySpot.getLocation())
