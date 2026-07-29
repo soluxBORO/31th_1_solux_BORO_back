@@ -33,7 +33,8 @@ public record MemberResponseDTO() {
 
     @Builder
     public record ReviewDetail(
-            String reviewerNickname,
+            Long memberId,
+            String memberNickname,
             String postTitle,
             LocalDate createdAt,
             String content

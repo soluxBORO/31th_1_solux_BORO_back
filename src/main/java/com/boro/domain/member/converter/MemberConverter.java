@@ -5,7 +5,6 @@ import com.boro.domain.member.entity.Asset;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
-import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.domain.post.entity.Item;
 import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.entity.PostLike;
@@ -43,8 +42,14 @@ public class MemberConverter {
             Integer likeCnt, Integer dislikeCnt, List<Review> reviewList, Member member
     ){
         List<MemberResponseDTO.ReviewDetail> list = reviewList.stream()
-                .map(review -> MemberConverter.toReviewDetail(member, review))
-                .toList();
+                .map(review -> {
+                    if (member.equals(review.getWriter())){
+                        // 작성한 리뷰
+                        return MemberConverter.toReviewDetail(review.getReceiver(), review);
+                    }
+                    // 받은 리뷰
+                    return MemberConverter.toReviewDetail(review.getWriter(), review);
+                }).toList();
 
         return MemberResponseDTO.Review.builder()
                 .likeCount(likeCnt)
@@ -53,9 +58,10 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.ReviewDetail toReviewDetail(Member reviewer, Review review){
+    public static MemberResponseDTO.ReviewDetail toReviewDetail(Member member, Review review){
         return MemberResponseDTO.ReviewDetail.builder()
-                .reviewerNickname(reviewer.getNickname())
+                .memberId(member.getId())
+                .memberNickname(member.getNickname())
                 .postTitle(review.getRentalRequest().getPost().getItem().getTitle())
                 .createdAt(review.getCreatedAt().toLocalDate())
                 .content(review.getContent())
