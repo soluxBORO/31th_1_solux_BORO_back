@@ -5,8 +5,9 @@ import com.boro.domain.member.entity.Asset;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
-import com.boro.domain.post.entity.*;
-import com.boro.domain.post.entity.enums.PostCategory;
+import com.boro.domain.post.entity.Item;
+import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.PostLike;
 import com.boro.domain.rentalrequest.entity.Review;
 
 import java.time.Duration;
@@ -53,9 +54,10 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.ReviewDetail toReviewDetail(Member reviewer, Review review){
+    public static MemberResponseDTO.ReviewDetail toReviewDetail(Member member, Review review){
         return MemberResponseDTO.ReviewDetail.builder()
-                .reviewerNickname(reviewer.getNickname())
+                .memberId(member.getId())
+                .memberNickname(member.getNickname())
                 .postTitle(review.getRentalRequest().getPost().getItem().getTitle())
                 .createdAt(review.getCreatedAt().toLocalDate())
                 .content(review.getContent())

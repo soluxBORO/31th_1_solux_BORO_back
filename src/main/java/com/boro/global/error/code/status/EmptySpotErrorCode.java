@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum EmptySpotErrorCode implements BaseErrorCode {
-    INVALID_CHECKOUT_TIME(HttpStatus.BAD_REQUEST, "EMPTYSPOT400_1", "퇴실 예정 시간은 현재 시각으로부터 5분 이내로 설정해야 합니다."),
+    INVALID_CHECKOUT_TIME(HttpStatus.BAD_REQUEST, "EMPTYSPOT400_1", "퇴실 예정 시간은 현재 시각으로부터 20분 이내로 설정해야 합니다."),
     EMPTY_SPOT_NOT_FOUND(HttpStatus.NOT_FOUND, "EMPTYSPOT404_1", "해당 빈자리 게시글을 찾을 수 없습니다."),
     NOT_EMPTY_SPOT_OWNER(HttpStatus.FORBIDDEN, "EMPTYSPOT403_1", "본인이 작성한 게시글만 삭제할 수 있습니다.")
     ;

@@ -17,9 +17,16 @@ import java.util.List;
 
 public class ChatConverter {
 
-    public static ChatRoom toChatRoom(ChatRequestDTO.ChatRoom request){
+    public static ChatRoom toChatRoom(PostCategory postCategory){
+        ChatRoomType chatRoomType;
+        if (postCategory == PostCategory.EMPTY_SPOTS) {
+            chatRoomType = ChatRoomType.EMPTY_SPOT;
+        } else {
+            chatRoomType = ChatRoomType.ITEM;
+        }
+
         return ChatRoom.builder()
-                .chatRoomType(request.chatRoomType())
+                .chatRoomType(chatRoomType)
                 .build();
     }
 

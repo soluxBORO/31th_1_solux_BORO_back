@@ -12,6 +12,12 @@ public record ChatRoomPreview(
         String lastMessageContent,
         LocalDateTime lastMessageAt,
         Long unreadCount,
-        String postTitle
+        String postTitle,
+        String location,
+        Integer floor,
+        Integer seatNumber,
+        Boolean hasPowerOutlet,
+        Boolean hasWindowSeat,
+        LocalDateTime expectedCheckoutTime
 ) {
 }
