@@ -1,5 +1,6 @@
 package com.boro.domain.post.repository;
 
+import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.entity.enums.PostCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             ORDER BY p.createdAt DESC
             """)
     List<Post> findPostList(@Param("category") PostCategory category, @Param("onlyAvailable") boolean onlyAvailable);
+
+    List<Post> findByMemberOrderByCreatedAtDesc(Member member);
 }

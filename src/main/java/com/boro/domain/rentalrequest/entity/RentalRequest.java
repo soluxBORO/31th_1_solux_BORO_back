@@ -61,6 +61,7 @@ public class RentalRequest extends BaseEntity {
     private void updateCompletedStatus() {
         if (borrowerReturned && ownerReturned) {
             this.requestStatus = RentalRequestStatus.COMPLETED;
+            post.markAsCompleted();
         }
     }
 }
