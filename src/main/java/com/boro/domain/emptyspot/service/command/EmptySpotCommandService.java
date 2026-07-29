@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class EmptySpotCommandService {
 
-    private static final long MAX_CHECKOUT_MINUTES = 5;
+    private static final long MAX_CHECKOUT_MINUTES = 20;
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;

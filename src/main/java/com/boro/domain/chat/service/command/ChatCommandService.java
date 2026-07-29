@@ -44,14 +44,14 @@ public class ChatCommandService {
     private final ApplicationEventPublisher eventPublisher;
 
     // TODO: 요청 게시물과 연결 필요
-    public RentalRequestResponseDTO.CreatedRentalRequest saveChatRoom(Long memberId, ChatRequestDTO.ChatRoom request){
+    public RentalRequestResponseDTO.CreatedRentalRequest saveChatRoom(Long memberId, Long postId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        Post post = postRepository.findById(request.postId())
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         Member owner = memberRepository.findById(post.getMember().getId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        ChatRoom chatRoom = ChatConverter.toChatRoom(request);
+        ChatRoom chatRoom = ChatConverter.toChatRoom(post.getPostCategory());
 
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, member));
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, owner));
