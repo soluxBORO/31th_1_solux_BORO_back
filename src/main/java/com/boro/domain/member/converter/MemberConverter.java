@@ -5,9 +5,8 @@ import com.boro.domain.member.entity.Asset;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
-import com.boro.domain.post.entity.Item;
-import com.boro.domain.post.entity.Post;
-import com.boro.domain.post.entity.PostLike;
+import com.boro.domain.post.entity.*;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.rentalrequest.entity.Review;
 
 import java.time.Duration;
