@@ -70,6 +70,10 @@ public class Post extends BaseEntity {
         this.status = PostStatus.RENTED;
     }
 
+    public void markAsCompleted() {
+        this.status = PostStatus.COMPLETED;
+    }
+
     public void reopen() {
         this.status = PostStatus.ACTIVE;
     }

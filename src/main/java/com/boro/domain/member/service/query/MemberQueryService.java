@@ -4,15 +4,18 @@ import com.boro.domain.member.converter.AssetConverter;
 import com.boro.domain.member.converter.MemberConverter;
 import com.boro.domain.member.dto.response.MemberResponseDTO;
 import com.boro.domain.member.entity.Member;
+import com.boro.domain.member.entity.enums.RentalHistoryType;
 import com.boro.domain.member.repository.AssetRepository;
 import com.boro.domain.member.repository.MemberAssetRepository;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.member.repository.PointHistoryRepository;
+import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.repository.PostLikeRepository;
 import com.boro.domain.post.repository.PostRepository;
 import com.boro.domain.rentalrequest.entity.Review;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
+import com.boro.domain.rentalrequest.repository.RentalRequestRepository;
 import com.boro.domain.rentalrequest.repository.ReviewRepository;
 import com.boro.global.error.code.status.MemberErrorCode;
 import com.boro.global.error.exception.handler.MemberException;
@@ -36,6 +39,7 @@ public class MemberQueryService {
     private final MemberAssetRepository memberAssetRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
+    private final RentalRequestRepository rentalRequestRepository;
 
     public Member findById(Long memberId){
         return memberRepository.findById(memberId)
@@ -109,7 +113,7 @@ public class MemberQueryService {
                 .toList();
     }
 
-    public List<MemberResponseDTO.MyPost> getMyPosts(Long memberId){
+    public List<MemberResponseDTO.MyPost> getMyPosts(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         return postRepository.findByMemberOrderByCreatedAtDesc(member).stream()
@@ -120,6 +124,18 @@ public class MemberQueryService {
                         return MemberConverter.toMyItemPost(post);
                     }
                 }).toList();
+    }
+
+    public List<MemberResponseDTO.MyRentalHistory> getMyRentalHistory(Long memberId, RentalHistoryType rentalHistoryType){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        List<Post> postList;
+        if (rentalHistoryType == RentalHistoryType.ALL){
+            postList = rentalRequestRepository.findCompletedPostsByMemberId(memberId);
+        } else {
+            postList = rentalRequestRepository.findProvidedPostsByMemberId(memberId);
+        }
+        return MemberConverter.getMyRentalHistory(postList, member);
     }
 
 }

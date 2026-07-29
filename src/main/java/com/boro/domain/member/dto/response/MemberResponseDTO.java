@@ -92,4 +92,21 @@ public record MemberResponseDTO() {
             Integer floor,
             Integer seatNumber
     ){}
+
+    @Builder
+    public record MyRentalHistory(
+            Long postId,
+            PostStatus postStatus,
+            PostCategory postCategory,
+            int price,
+            RentalPriceUnit priceUnit,
+            String postTitle,
+            String postMemberNickname,
+            String postDescription,
+            LocalDate rentalStartTime,
+            LocalDate rentalEndTime,
+            String location,
+            Integer floor,
+            Integer seatNumber
+    ){}
 }

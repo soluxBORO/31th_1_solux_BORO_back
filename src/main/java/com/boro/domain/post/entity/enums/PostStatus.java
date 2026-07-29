@@ -4,6 +4,6 @@ public enum PostStatus {
     ACTIVE, // 대여가능
     PENDING, // 요청중
     RENTED, // 대여중
-    CLOSED,
+    COMPLETED, // 반납 완료, 양도 완료
     DELETED
 }

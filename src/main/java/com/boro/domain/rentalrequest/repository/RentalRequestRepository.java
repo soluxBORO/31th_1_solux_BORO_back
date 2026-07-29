@@ -62,4 +62,34 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     List<RentalRequest> findByPostIdAndRequestStatus(Long postId, RentalRequestStatus requestStatus);
 
     boolean existsByPostAndMember(Post post, Member member);
+
+    @Query("""
+        SELECT rr.post FROM RentalRequest rr
+        JOIN rr.post p
+        WHERE rr.requestStatus =
+                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED 
+        AND (p.member.id = :memberId
+        OR rr.member.id = :memberId)
+        ORDER BY rr.updatedAt DESC
+    """)
+    List<Post> findCompletedPostsByMemberId(@Param("memberId") Long memberId);
+
+    @Query("""
+        SELECT rr.post FROM RentalRequest rr
+        JOIN rr.post p
+        WHERE rr.requestStatus =
+                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED
+          AND ((
+                p.postCategory =
+                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+                and p.member.id = :memberId
+            ) or (
+                p.postCategory <>
+                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+                and rr.member.id = :memberId
+            ))
+        ORDER BY rr.updatedAt DESC
+    """)
+    List<Post> findProvidedPostsByMemberId(@Param("memberId") Long memberId);
+
 }

@@ -3,6 +3,7 @@ package com.boro.domain.member.controller;
 import com.boro.domain.auth.service.command.AuthCommandService;
 import com.boro.domain.member.dto.request.MemberRequestDTO;
 import com.boro.domain.member.dto.response.MemberResponseDTO;
+import com.boro.domain.member.entity.enums.RentalHistoryType;
 import com.boro.domain.member.service.command.MemberCommandService;
 import com.boro.domain.member.service.query.MemberQueryService;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
@@ -125,6 +126,16 @@ public class MemberController {
     public ApiResponse<List<MemberResponseDTO.MyPost>> getMyPosts(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         List<MemberResponseDTO.MyPost> myPosts = memberQueryService.getMyPosts(customUserDetails.getMemberId());
         return ApiResponse.onSuccess(myPosts);
+    }
+
+    @Operation(summary = "거래내역 조회 API", description = "거래내역 조회하는 API")
+    @GetMapping("/rentals")
+    public ApiResponse<List<MemberResponseDTO.MyRentalHistory>> getMyRentals(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            RentalHistoryType rentalHistoryType
+    ) {
+        List<MemberResponseDTO.MyRentalHistory> myRentalHistory = memberQueryService.getMyRentalHistory(customUserDetails.getMemberId(), rentalHistoryType);
+        return ApiResponse.onSuccess(myRentalHistory);
     }
 
 }

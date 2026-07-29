@@ -6,6 +6,7 @@ import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
 import com.boro.domain.post.entity.*;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.rentalrequest.entity.Review;
 
 import java.time.Duration;
@@ -97,7 +98,7 @@ public class MemberConverter {
                 .priceUnit(item.getRentalPriceUnit())
                 .postTitle(item.getTitle())
                 .postDescription(item.getDescription())
-//                .requestCreatedAt(post.getCreatedAt().toLocalDate())
+                .requestCreatedAt(item.getRentalStartTime())
                 .build();
     }
 
@@ -113,8 +114,49 @@ public class MemberConverter {
                 .location(emptySpot.getLocation())
                 .floor(emptySpot.getFloor())
                 .seatNumber(emptySpot.getSeatNumber())
-//                .requestCreatedAt(post.getCreatedAt().toLocalDate())
+                .requestCreatedAt(emptySpot.getExpectedCheckoutTime().toLocalDate())
                 .leftMinutes(leftMinutes)
+                .build();
+    }
+
+    public static List<MemberResponseDTO.MyRentalHistory> getMyRentalHistory(List<Post> postList, Member member){
+        return postList.stream()
+                .map(post -> {
+                    if (post.getPostCategory() == PostCategory.EMPTY_SPOTS) {
+                        return toRentalEmptySpotHistory(post);
+                    } else {
+                        return toRentalItemHistory(post, member);
+                    }
+                }).toList();
+    }
+
+    public static MemberResponseDTO.MyRentalHistory toRentalItemHistory(Post post, Member member){
+        Item item = post.getItem();
+        return MemberResponseDTO.MyRentalHistory.builder()
+                .postId(post.getId())
+                .postStatus(post.getStatus())
+                .postCategory(post.getPostCategory())
+                .price(item.getRentalPrice())
+                .priceUnit(item.getRentalPriceUnit())
+                .postTitle(item.getTitle())
+                .postMemberNickname(member.getNickname())
+                .postDescription(item.getDescription())
+                .rentalStartTime(item.getRentalStartTime())
+                .rentalEndTime(item.getRentalEndTime())
+                .build();
+    }
+
+    public static MemberResponseDTO.MyRentalHistory toRentalEmptySpotHistory(Post post){
+        EmptySpot emptySpot = post.getEmptySpot();
+        return MemberResponseDTO.MyRentalHistory.builder()
+                .postId(post.getId())
+                .postStatus(post.getStatus())
+                .postCategory(post.getPostCategory())
+                .postMemberNickname(post.getMember().getNickname())
+                .rentalEndTime(emptySpot.getExpectedCheckoutTime().toLocalDate())
+                .location(emptySpot.getLocation())
+                .floor(emptySpot.getFloor())
+                .seatNumber(emptySpot.getSeatNumber())
                 .build();
     }
 }
