@@ -60,19 +60,11 @@ public class JwtUtil {
     }
 
     private Jws<Claims> getClaims(String token) throws JwtException {
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .clockSkewSeconds(60)
-                    .build()
-                    .parseSignedClaims(token);
-
-        } catch (ExpiredJwtException e) {
-            throw new AuthException(AuthErrorCode.EXPIRED_TOKEN);
-
-        } catch (JwtException e) {
-            throw new AuthException(AuthErrorCode.INVALID_TOKEN);
-        }
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .clockSkewSeconds(60)
+                .build()
+                .parseSignedClaims(token);
     }
 
     public static String resolveToken(HttpServletRequest request) {
