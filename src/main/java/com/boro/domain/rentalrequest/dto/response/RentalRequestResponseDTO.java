@@ -39,6 +39,8 @@ public record RentalRequestResponseDTO() {
     public record SeatDetail(
             String location,
             Integer floor,
+            Integer seatNumber,
+            LocalDateTime expectedCheckoutTime,
             Boolean hasPowerOutlet,
             Boolean hasWindowSeat
     ) {

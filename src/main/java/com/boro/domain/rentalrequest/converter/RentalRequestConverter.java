@@ -61,6 +61,8 @@ public class RentalRequestConverter {
         return RentalRequestResponseDTO.SeatDetail.builder()
                 .location(emptySpot.getLocation())
                 .floor(emptySpot.getFloor())
+                .seatNumber(emptySpot.getSeatNumber())
+                .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
                 .hasPowerOutlet(emptySpot.getHasPowerOutlet())
                 .hasWindowSeat(emptySpot.getHasWindowSeat())
                 .build();
