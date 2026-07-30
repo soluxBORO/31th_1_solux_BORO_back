@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = jwtUtil.resolveToken(request);
         try {
-            if (isValid(token)) {
+            if (StringUtils.hasText(token) && isValid(token)) {
                 Long memberId = jwtUtil.getMemberId(token);
                 UserDetails customUserDetails = customUserDetailsService.loadUserByUsername(memberId.toString());
                 Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
