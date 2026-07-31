@@ -13,11 +13,6 @@ public class ChatRequestDTO {
             List<String> imageUrls
     ){}
 
-    public record ChatRoom(
-            Long postId,
-            ChatRoomType chatRoomType
-    ){}
-
     public record ChatRoomTest(
             Long ownerId,
             Long postId,
