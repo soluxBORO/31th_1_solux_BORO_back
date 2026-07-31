@@ -17,4 +17,10 @@ public record AuthResponseDTO() {
             String accessToken
     ){
     }
+
+    @Builder
+    public record NicknameCheck(
+            String nickname,
+            boolean available
+    ){}
 }

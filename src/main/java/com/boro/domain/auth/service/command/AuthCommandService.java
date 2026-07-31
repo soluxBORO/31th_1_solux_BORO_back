@@ -121,6 +121,11 @@ public class AuthCommandService {
         redisStorageCommandService.addBlackList(accessToken);
     }
 
+    public AuthResponseDTO.NicknameCheck checkNickname(String nickname){
+        boolean exists = memberRepository.existsByNickname(nickname);
+        return AuthConverter.toNicknameCheck(nickname, exists);
+    }
+
     public void withdraw(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
