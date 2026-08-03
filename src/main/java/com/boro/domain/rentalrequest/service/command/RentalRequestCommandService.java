@@ -62,6 +62,7 @@ public class RentalRequestCommandService {
             rejectOtherPendingRequests(rentalRequest);
         } else {
             rentalRequest.reject();
+            rentalRequest.getPost().markAsActive();
         }
         return RentalRequestConverter.toDecisionResult(rentalRequest);
     }
