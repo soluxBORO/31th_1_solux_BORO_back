@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class EmptySpotCommandService {
 
+    private static final long MIN_CHECKOUT_MINUTES = 5;
     private static final long MAX_CHECKOUT_MINUTES = 20;
 
     private final PostRepository postRepository;
@@ -80,7 +81,10 @@ public class EmptySpotCommandService {
 
     private void validateCheckoutTime(LocalDateTime expectedCheckoutTime) {
         LocalDateTime now = LocalDateTime.now();
-        if (expectedCheckoutTime.isBefore(now) || expectedCheckoutTime.isAfter(now.plusMinutes(MAX_CHECKOUT_MINUTES))) {
+        if (expectedCheckoutTime.isBefore(now.plusMinutes(MIN_CHECKOUT_MINUTES))) {
+            throw new EmptySpotException(EmptySpotErrorCode.CHECKOUT_TIME_TOO_SOON);
+        }
+        if (expectedCheckoutTime.isAfter(now.plusMinutes(MAX_CHECKOUT_MINUTES))) {
             throw new EmptySpotException(EmptySpotErrorCode.INVALID_CHECKOUT_TIME);
         }
     }
