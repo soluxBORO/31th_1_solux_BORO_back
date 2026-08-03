@@ -42,7 +42,12 @@ public class RentalRequestConverter {
                 .postCategory(post.getPostCategory())
                 .ownerNickname(post.getMember().getNickname())
                 .createdAt(rentalRequest.getCreatedAt())
+                .borrowerReturned(rentalRequest.isBorrowerReturned())
+                .ownerReturned(rentalRequest.isOwnerReturned())
                 .itemDetail(itemDetail)
+
+
+
                 .seatDetail(seatDetail)
                 .build();
     }

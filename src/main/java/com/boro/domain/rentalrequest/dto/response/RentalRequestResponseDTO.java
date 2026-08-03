@@ -20,7 +20,8 @@ public record RentalRequestResponseDTO() {
             PostCategory postCategory,
             String ownerNickname,
             LocalDateTime createdAt,
-
+            boolean borrowerReturned,
+            boolean ownerReturned,
             ItemDetail itemDetail,
             SeatDetail seatDetail
     ){}
