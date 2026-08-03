@@ -58,12 +58,12 @@ public class Post extends BaseEntity {
         emptySpot.setPost(this);
     }
 
-    public void markAsDeleted() {
-        this.status = PostStatus.DELETED;
+    public void markAsActive() {
+        this.status = PostStatus.ACTIVE;
     }
 
-    public void markAsPending() {
-        this.status = PostStatus.PENDING;
+    public void markAsDeleted() {
+        this.status = PostStatus.DELETED;
     }
 
     public void markAsRented() {

@@ -40,7 +40,6 @@ public class RentalRequestCommandService {
         RentalRequest rentalRequest = RentalRequestConverter.toRentalRequest(member, post);
         RentalRequest saved = rentalRequestRepository.save(rentalRequest);
         chatRoom.setRentalRequest(rentalRequest);
-        post.markAsPending();
         return RentalRequestConverter.toCreatedRentalRequest(saved);
     }
 
@@ -62,6 +61,7 @@ public class RentalRequestCommandService {
             rejectOtherPendingRequests(rentalRequest);
         } else {
             rentalRequest.reject();
+            rentalRequest.getPost().markAsActive();
         }
         return RentalRequestConverter.toDecisionResult(rentalRequest);
     }
