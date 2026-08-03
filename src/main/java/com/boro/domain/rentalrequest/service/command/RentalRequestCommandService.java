@@ -40,6 +40,7 @@ public class RentalRequestCommandService {
         RentalRequest rentalRequest = RentalRequestConverter.toRentalRequest(member, post);
         RentalRequest saved = rentalRequestRepository.save(rentalRequest);
         chatRoom.setRentalRequest(rentalRequest);
+        saved.assignChatRoom(chatRoom);
         return RentalRequestConverter.toCreatedRentalRequest(saved);
     }
 

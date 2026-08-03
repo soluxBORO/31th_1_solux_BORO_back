@@ -15,6 +15,7 @@ public record RentalRequestResponseDTO() {
     public record RentalRequestPreview(
             Long rentalRequestId,
             Long postId,
+            Long chatRoomId,
             String imageUrl,
             RentalRequestStatus rentalRequestStatus,
             PostCategory postCategory,

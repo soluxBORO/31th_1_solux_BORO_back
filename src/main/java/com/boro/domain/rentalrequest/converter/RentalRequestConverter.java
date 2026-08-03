@@ -40,6 +40,7 @@ public class RentalRequestConverter {
         return RentalRequestResponseDTO.RentalRequestPreview.builder()
                 .rentalRequestId(rentalRequest.getId())
                 .postId(post.getId())
+                .chatRoomId(rentalRequest.getChatRoom().getId())
                 .imageUrl(imageUrl)
                 .rentalRequestStatus(rentalRequest.getRequestStatus())
                 .postCategory(post.getPostCategory())

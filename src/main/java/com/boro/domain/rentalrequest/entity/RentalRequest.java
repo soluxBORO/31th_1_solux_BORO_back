@@ -1,5 +1,6 @@
 package com.boro.domain.rentalrequest.entity;
 
+import com.boro.domain.chat.entity.ChatRoom;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.Post;
 import com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus;
@@ -40,6 +41,9 @@ public class RentalRequest extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    @OneToOne(mappedBy = "rentalRequest", fetch = FetchType.LAZY)
+    private ChatRoom chatRoom;
+
     public void approve() {
         this.requestStatus = RentalRequestStatus.APPROVED;
     }
@@ -63,5 +67,9 @@ public class RentalRequest extends BaseEntity {
             this.requestStatus = RentalRequestStatus.COMPLETED;
             post.markAsCompleted();
         }
+    }
+
+    public void assignChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
     }
 }
