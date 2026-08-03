@@ -15,6 +15,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     @Query("""
             SELECT rr FROM RentalRequest rr
             JOIN FETCH rr.post p
+            JOIN FETCH rr.chatRoom cr
             LEFT JOIN FETCH p.item i
             JOIN FETCH p.member postAuthor
             JOIN FETCH rr.member requester
@@ -38,6 +39,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     @Query("""
             SELECT rr FROM RentalRequest rr
             JOIN FETCH rr.post p
+            JOIN FETCH rr.chatRoom cr
             LEFT JOIN FETCH p.item i
             JOIN FETCH p.member postAuthor
             JOIN FETCH rr.member requester
