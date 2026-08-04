@@ -29,6 +29,8 @@ public class Member extends BaseEntity {
 
     private String nickname;
 
+    private String phoneNumber;
+
     @Builder.Default
     private boolean active = true;
 
@@ -47,6 +49,7 @@ public class Member extends BaseEntity {
 
     public void changeMemberInfo(MemberRequestDTO.ChangeMemberInfo request){
         this.nickname = request.nickname();
+        this.phoneNumber = request.phoneNumber();
     }
 
     public void applyPoint(int point) {

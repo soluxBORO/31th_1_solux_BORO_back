@@ -21,10 +21,12 @@ public class RentalRequestConverter {
         RentalRequestResponseDTO.ItemDetail itemDetail = null;
         RentalRequestResponseDTO.SeatDetail seatDetail = null;
         String imageUrl = null;
+        String ownerNickname = null;
 
         if (Objects.requireNonNull(post.getPostCategory()) == PostCategory.EMPTY_SPOTS) {
             EmptySpot emptySpot = post.getEmptySpot();
             seatDetail = toSeatDetail(emptySpot);
+            ownerNickname = post.getMember().getNickname();
         } else {
             Item item = post.getItem();
             itemDetail = toItemDetail(item);
@@ -32,17 +34,22 @@ public class RentalRequestConverter {
                     .findFirst()
                     .map(ItemImage::getImageUrl)
                     .orElse(null);
+            ownerNickname = rentalRequest.getMember().getNickname();
         }
 
         return RentalRequestResponseDTO.RentalRequestPreview.builder()
                 .rentalRequestId(rentalRequest.getId())
                 .postId(post.getId())
+                .chatRoomId(rentalRequest.getChatRoom().getId())
                 .imageUrl(imageUrl)
                 .rentalRequestStatus(rentalRequest.getRequestStatus())
                 .postCategory(post.getPostCategory())
-                .ownerNickname(post.getMember().getNickname())
+                .ownerNickname(ownerNickname)
                 .createdAt(rentalRequest.getCreatedAt())
+                .borrowerReturned(rentalRequest.isBorrowerReturned())
+                .ownerReturned(rentalRequest.isOwnerReturned())
                 .itemDetail(itemDetail)
+
                 .seatDetail(seatDetail)
                 .build();
     }
@@ -61,6 +68,8 @@ public class RentalRequestConverter {
         return RentalRequestResponseDTO.SeatDetail.builder()
                 .location(emptySpot.getLocation())
                 .floor(emptySpot.getFloor())
+                .seatNumber(emptySpot.getSeatNumber())
+                .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
                 .hasPowerOutlet(emptySpot.getHasPowerOutlet())
                 .hasWindowSeat(emptySpot.getHasWindowSeat())
                 .build();

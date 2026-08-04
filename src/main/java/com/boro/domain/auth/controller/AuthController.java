@@ -45,4 +45,13 @@ public class AuthController {
         return ApiResponse.onSuccess(accessTokenResult);
     }
 
+    @Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 확인하는 API")
+    @PostMapping("/nicknames-check")
+    public ApiResponse<AuthResponseDTO.NicknameCheck> checkNickname(
+            @RequestParam String nickname
+    ){
+        AuthResponseDTO.NicknameCheck nicknameCheck = authCommandService.checkNickname(nickname);
+        return ApiResponse.onSuccess(nicknameCheck);
+    }
+
 }

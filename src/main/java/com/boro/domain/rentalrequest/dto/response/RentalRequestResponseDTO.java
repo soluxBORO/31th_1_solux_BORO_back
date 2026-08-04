@@ -15,12 +15,14 @@ public record RentalRequestResponseDTO() {
     public record RentalRequestPreview(
             Long rentalRequestId,
             Long postId,
+            Long chatRoomId,
             String imageUrl,
             RentalRequestStatus rentalRequestStatus,
             PostCategory postCategory,
             String ownerNickname,
             LocalDateTime createdAt,
-
+            boolean borrowerReturned,
+            boolean ownerReturned,
             ItemDetail itemDetail,
             SeatDetail seatDetail
     ){}
@@ -39,6 +41,8 @@ public record RentalRequestResponseDTO() {
     public record SeatDetail(
             String location,
             Integer floor,
+            Integer seatNumber,
+            LocalDateTime expectedCheckoutTime,
             Boolean hasPowerOutlet,
             Boolean hasWindowSeat
     ) {

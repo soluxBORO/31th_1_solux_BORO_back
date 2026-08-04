@@ -39,4 +39,13 @@ public class AuthConverter {
                 .accessToken(accessToken)
                 .build();
     }
+
+    public static AuthResponseDTO.NicknameCheck toNicknameCheck(
+            String nickname, boolean exists
+    ){
+        return AuthResponseDTO.NicknameCheck.builder()
+                .nickname(nickname)
+                .available(!exists)
+                .build();
+    }
 }

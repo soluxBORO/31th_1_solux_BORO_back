@@ -3,6 +3,9 @@ name: CD
 on:
   push:
     branches: [develop]
+  # 배포 스크립트/워크플로우 자체를 수정할 때, develop에 머지하지 않고도
+  # 원하는 브랜치를 골라 Actions 탭에서 수동으로 CD를 실행해볼 수 있게 함.
+  workflow_dispatch:
 
 permissions:
   contents: read

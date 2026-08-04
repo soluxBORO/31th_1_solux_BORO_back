@@ -1,6 +1,8 @@
 package com.boro.domain.member.dto.response;
 
 import com.boro.domain.member.entity.enums.AssetCategory;
+import com.boro.domain.post.entity.enums.PostCategory;
+import com.boro.domain.post.entity.enums.PostStatus;
 import com.boro.domain.post.entity.enums.RentalPriceUnit;
 import lombok.Builder;
 
@@ -33,7 +35,8 @@ public record MemberResponseDTO() {
 
     @Builder
     public record ReviewDetail(
-            String reviewerNickname,
+            Long memberId,
+            String memberNickname,
             String postTitle,
             LocalDate createdAt,
             String content
@@ -63,13 +66,49 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberLikePost(
-            String profileImageUrl,
+            String postImageUrl,
+            PostCategory postCategory,
+            PostStatus postStatus,
             String postTitle,
             String postDescription,
             LocalDate requestCreatedAt,
+            String profileImageUrl,
             String postMemberNickname,
             int price,
             RentalPriceUnit priceUnit,
             int likeCount
+    ){}
+
+    @Builder
+    public record MyPost(
+            Long postId,
+            PostStatus postStatus,
+            PostCategory postCategory,
+            int price,
+            RentalPriceUnit priceUnit,
+            String postTitle,
+            String postDescription,
+            LocalDate requestCreatedAt,
+            Long leftMinutes,
+            String location,
+            Integer floor,
+            Integer seatNumber
+    ){}
+
+    @Builder
+    public record MyRentalHistory(
+            Long postId,
+            PostStatus postStatus,
+            PostCategory postCategory,
+            int price,
+            RentalPriceUnit priceUnit,
+            String postTitle,
+            String postMemberNickname,
+            String postDescription,
+            LocalDate rentalStartTime,
+            LocalDate rentalEndTime,
+            String location,
+            Integer floor,
+            Integer seatNumber
     ){}
 }
