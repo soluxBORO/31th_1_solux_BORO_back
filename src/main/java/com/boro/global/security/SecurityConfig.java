@@ -47,6 +47,8 @@ public class SecurityConfig {
             "/auth/google/callback/**",
             "favicon.ico",
             "/error",
+            "/actuator/health",
+            "/actuator/prometheus"
     };
 
 
