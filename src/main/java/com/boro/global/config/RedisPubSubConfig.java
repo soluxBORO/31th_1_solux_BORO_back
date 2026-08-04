@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 
 @Configuration
 public class RedisPubSubConfig {
@@ -32,12 +33,16 @@ public class RedisPubSubConfig {
 
     // 실제 메시지를 처리하는 subscriber 설정 추가
     @Bean("chatMessageListenerAdapter")
-    public MessageListenerAdapter chatMessageListenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "sendMessage");
+    public MessageListenerAdapter chatMessageListenerAdapter(RedisSubscriber subscriber, GenericJackson2JsonRedisSerializer jsonSerializer) {
+        MessageListenerAdapter adapter = new MessageListenerAdapter(subscriber, "sendMessage");
+        adapter.setSerializer(jsonSerializer);
+        return adapter;
     }
 
     @Bean("chatRoomUpdateListenerAdapter")
-    public MessageListenerAdapter chatRoomUpdateListenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "handleChatRoomUpdate");
+    public MessageListenerAdapter chatRoomUpdateListenerAdapter(RedisSubscriber subscriber, GenericJackson2JsonRedisSerializer jsonSerializer) {
+        MessageListenerAdapter adapter = new MessageListenerAdapter(subscriber, "handleChatRoomUpdate");
+        adapter.setSerializer(jsonSerializer);
+        return adapter;
     }
 }
