@@ -153,13 +153,12 @@ public class ChatConverter {
     }
 
     public static ChatResponseDTO.ChatMessageSentEvent toChatMessageSentEvent(
-            ChatMessage chatMessage, Long receiverId
+            ChatMessage chatMessage, Long memberId
     ){
         return ChatResponseDTO.ChatMessageSentEvent.builder()
                 .chatRoomId(chatMessage.getChatRoom().getId())
                 .messageId(chatMessage.getId())
-                .senderId(chatMessage.getMember().getId())
-                .receiverId(receiverId)
+                .senderId(memberId)
                 .content(chatMessage.getContent())
                 .createdAt(chatMessage.getCreatedAt())
                 .build();

@@ -57,7 +57,6 @@ public class ChatResponseDTO {
             Long chatRoomId,
             Long messageId,
             Long senderId,
-            Long receiverId,
             String content,
             LocalDateTime createdAt
     ){}

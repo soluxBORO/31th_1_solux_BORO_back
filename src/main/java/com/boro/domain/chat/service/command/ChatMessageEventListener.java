@@ -38,22 +38,22 @@ public class ChatMessageEventListener {
     public void handleChatMessageSent(ChatResponseDTO.ChatMessageSentEvent request){
         Member member = memberRepository.findById(request.senderId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        Long opponentId = chatMemberRepository.findOpponentId(request.chatRoomId(), member.getId())
+        ChatMember opponent = chatMemberRepository.findOpponentId(request.chatRoomId(), member.getId())
                 .orElseThrow(() -> new ChatException(ChatErrorCode.CHAT_OPPONENT_NOT_FOUND));
         ChatMessage chatMessage = chatMessageRepository.findById(request.messageId())
                 .orElseThrow(() -> new ChatException(ChatErrorCode.CHAT_MESSAGE_NOT_FOUND));
+        Long opponentId = opponent.getMember().getId();
         boolean opponentIsViewing = chatRoomViewerService.isViewingRoom(request.chatRoomId(), opponentId);
         long unreadCount = 0L;
 
         if (opponentIsViewing){
             log.info("상대방 접속 여부: opponentIsViewing={}", opponentIsViewing);
-            ChatMember opponentChatMember = chatMemberRepository.findByChatRoom_IdAndMember_Id(request.chatRoomId(), opponentId)
-                    .orElseThrow(() -> new ChatException(ChatErrorCode.CHAT_OPPONENT_NOT_FOUND));
-            opponentChatMember.updateLastReadMessage(chatMessage);
+            log.info("opponentChatMember={}", opponent.getMember().getId());
+            opponent.updateLastReadMessage(chatMessage);
         } else {
-            unreadCount = chatQueryService.countUnreadMessages(request.chatRoomId(), request.receiverId());
+            unreadCount = chatQueryService.countUnreadMessages(request.chatRoomId(), opponentId);
         }
-        ChatResponseDTO.ChatRoomUpdate chatRoomUpdate = ChatConverter.toChatRoomUpdate(request.senderId(), request.chatRoomId(), request.content(), request.createdAt(), unreadCount, opponentIsViewing);
+        ChatResponseDTO.ChatRoomUpdate chatRoomUpdate = ChatConverter.toChatRoomUpdate(opponentId, request.chatRoomId(), request.content(), request.createdAt(), unreadCount, opponentIsViewing);
         redisPublisher.publishChatRoomUpdate(chatRoomUpdate);
     }
 }

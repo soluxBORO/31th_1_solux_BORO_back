@@ -31,6 +31,11 @@ public class RedisPublisher {
      * 사용자별 채팅방 목록 업데이트 발행
      */
     public void publishChatRoomUpdate(ChatResponseDTO.ChatRoomUpdate request){
-        redisTemplate.convertAndSend(CHAT_ROOM_UPDATE_TOPIC_PREFIX+ request.memberId(), request);
+        Long subscriberCount = redisTemplate.convertAndSend(CHAT_ROOM_UPDATE_TOPIC_PREFIX + request.memberId(), request);
+        log.info(
+                "Redis publish topic={}, subscriberCount={}",
+                CHAT_ROOM_UPDATE_TOPIC_PREFIX + request.memberId(),
+                subscriberCount
+        );
     }
 }

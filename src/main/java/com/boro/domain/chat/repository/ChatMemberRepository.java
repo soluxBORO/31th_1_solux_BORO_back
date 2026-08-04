@@ -10,12 +10,12 @@ import java.util.Optional;
 public interface ChatMemberRepository extends JpaRepository<ChatMember, Long> {
 
     @Query("""
-        select cm.member.id
+        select cm
         from ChatMember cm
         where cm.chatRoom.id = :roomId
           and cm.member.id <> :senderId
         """)
-    Optional<Long> findOpponentId(@Param("roomId") Long roomId, @Param("senderId") Long senderId);
+    Optional<ChatMember> findOpponentId(@Param("roomId") Long roomId, @Param("senderId") Long senderId);
 
 
     Optional<ChatMember> findByChatRoom_IdAndMember_Id(Long chatRoomId, Long memberId);
