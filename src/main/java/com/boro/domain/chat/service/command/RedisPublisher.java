@@ -19,7 +19,12 @@ public class RedisPublisher {
      *  채팅방 실시간 메시지 발행
      */
     public void publishChatMessage(ChatResponseDTO.ChatMessage message) {
-        redisTemplate.convertAndSend(CHAT_MESSAGE_TOPIC_PREFIX + message.roomId(), message);
+        Long subscriberCount = redisTemplate.convertAndSend(CHAT_MESSAGE_TOPIC_PREFIX + message.roomId(), message);
+        log.info(
+                "Redis publish topic={}, subscriberCount={}",
+                CHAT_MESSAGE_TOPIC_PREFIX + message.roomId(),
+                subscriberCount
+        );
     }
 
     /**

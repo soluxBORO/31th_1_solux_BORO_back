@@ -38,6 +38,7 @@ public class StompHandler implements ChannelInterceptor {
         log.info("STOMP Command = {}", accessor.getCommand());
         switch (stompCommand) {
             case CONNECT:
+                log.info("===== CONNECT 요청 수신 =====");
                 accessor.setLeaveMutable(true);
                 String token = extractToken(accessor);
                 Long memberId = Long.parseLong(jwtProvider.getAuthentication(token).getName());
