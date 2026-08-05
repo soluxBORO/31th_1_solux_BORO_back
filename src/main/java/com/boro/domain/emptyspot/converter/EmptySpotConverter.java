@@ -33,6 +33,7 @@ public class EmptySpotConverter {
 
     public static EmptySpotResponseDTO.EmptySpotSummary toEmptySpotSummary(EmptySpot emptySpot) {
         return EmptySpotResponseDTO.EmptySpotSummary.builder()
+                .postId(emptySpot.getPost().getId())
                 .emptySpotId(emptySpot.getId())
                 .location(emptySpot.getLocation())
                 .floor(emptySpot.getFloor())

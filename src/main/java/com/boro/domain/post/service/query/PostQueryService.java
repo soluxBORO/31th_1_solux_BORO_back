@@ -28,7 +28,7 @@ public class PostQueryService {
     private final PostLikeRepository postLikeRepository;
 
     public List<PostResponseDTO.PostSummary> getPostList(PostCategory category, boolean onlyAvailable, Long memberId) {
-        List<Post> posts = postRepository.findPostList(category, onlyAvailable);
+        List<Post> posts = postRepository.findItemPostList(category, onlyAvailable);
         if (posts.isEmpty()) {
             return List.of();
         }

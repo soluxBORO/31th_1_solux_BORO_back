@@ -20,6 +20,7 @@ public record EmptySpotResponseDTO() {
 
     @Builder
     public record EmptySpotSummary(
+            Long postId, 
             Long emptySpotId,
             String location,
             Integer floor,
