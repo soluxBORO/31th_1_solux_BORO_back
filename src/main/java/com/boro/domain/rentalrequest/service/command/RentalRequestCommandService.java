@@ -84,7 +84,6 @@ public class RentalRequestCommandService {
         } else {
             throw new RentalRequestException(RentalRequestErrorCode.NOT_RENTING);
         }
-        rentalRequest.getPost().reopen();
         return RentalRequestConverter.toDecisionResult(rentalRequest);
     }
 
