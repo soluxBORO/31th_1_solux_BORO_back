@@ -109,4 +109,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoomPreview> findEmptySpotChatRoomList(
             Long memberId
     );
+
+
 }
