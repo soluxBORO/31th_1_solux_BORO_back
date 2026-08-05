@@ -41,7 +41,7 @@ public class RentalRequestCommandService {
         RentalRequest saved = rentalRequestRepository.save(rentalRequest);
         chatRoom.setRentalRequest(rentalRequest);
         saved.assignChatRoom(chatRoom);
-        return RentalRequestConverter.toCreatedRentalRequest(saved);
+        return RentalRequestConverter.toCreatedRentalRequest(saved, chatRoom);
     }
 
     public RentalRequestResponseDTO.DecisionResult decide(Long memberId, Long rentalId, Decide decide) {
