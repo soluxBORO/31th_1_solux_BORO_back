@@ -17,6 +17,7 @@ public class MemberConverter {
 
     public static MemberResponseDTO.MemberInfo toMemberInfo(Member member){
         return MemberResponseDTO.MemberInfo.builder()
+                .profileUrl(member.getProfileUrl())
                 .email(member.getEmail())
                 .studentNumber(member.getStudentNumber())
                 .nickname(member.getNickname())
