@@ -101,6 +101,7 @@ public class ChatConverter {
         }
 
         return ChatResponseDTO.ChatMessageList.builder()
+                .chatRoomId(chatRoom.getId())
                 .chatRoomName(opponent.getNickname())
                 // TODO: 대여 요청 엔티티와 연결 필요
                 .postName(postName)
