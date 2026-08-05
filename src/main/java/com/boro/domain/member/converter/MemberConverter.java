@@ -85,6 +85,7 @@ public class MemberConverter {
                 .postDescription(item.getDescription())
                 .requestCreatedAt(post.getCreatedAt().toLocalDate())
                 .profileImageUrl(post.getMember().getProfileUrl())
+                .postMemberNickname(post.getMember().getNickname())
                 .price(item.getRentalPrice())
                 .priceUnit(item.getRentalPriceUnit())
                 .likeCount(post.getPostLikeList().size())
