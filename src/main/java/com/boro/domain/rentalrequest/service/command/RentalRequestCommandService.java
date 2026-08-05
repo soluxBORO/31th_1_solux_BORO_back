@@ -6,6 +6,7 @@ import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.entity.enums.PointReason;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.rentalrequest.converter.RentalRequestConverter;
 import com.boro.domain.rentalrequest.dto.request.RentalRequestRequestDTO;
 import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
@@ -35,13 +36,17 @@ public class RentalRequestCommandService {
     private final ReviewRepository reviewRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public RentalRequestResponseDTO.CreatedRentalRequest createRentalRequest(ChatRoom chatRoom, Post post, Member member){
+    public boolean existsRentalRequest(Member member, Post post){
+        return rentalRequestRepository.existsByPostAndMember(post, member);
+    }
+
+    public RentalRequestResponseDTO.CreatedRentalRequest createRentalRequest(ChatRoom chatRoom, Post post, Member member, boolean exists){
         validateRentalRequest(post, member);
         RentalRequest rentalRequest = RentalRequestConverter.toRentalRequest(member, post);
         RentalRequest saved = rentalRequestRepository.save(rentalRequest);
         chatRoom.setRentalRequest(rentalRequest);
         saved.assignChatRoom(chatRoom);
-        return RentalRequestConverter.toCreatedRentalRequest(saved, chatRoom);
+        return RentalRequestConverter.toCreatedRentalRequest(saved, chatRoom, false);
     }
 
     public RentalRequestResponseDTO.DecisionResult decide(Long memberId, Long rentalId, Decide decide) {
@@ -135,17 +140,21 @@ public class RentalRequestCommandService {
 
     private void validateRentalRequest(Post post, Member member){
         // 자신의 게시글에는 대여 요청 불가
-        if (post.getMember().getId().equals(member.getId())) {
+        if (post.getPostCategory() != PostCategory.EMPTY_SPOTS && post.getMember().getId().equals(member.getId())) {
             throw new RentalRequestException(
                     RentalRequestErrorCode.CANNOT_REQUEST_OWN_POST
             );
+        } else {
+
+
+
         }
 
         // 이미 대여 요청한 경우
-        if (rentalRequestRepository.existsByPostAndMember(post, member)) {
-            throw new RentalRequestException(
-                    RentalRequestErrorCode.RENTAL_REQUEST_ALREADY_EXISTS
-            );
-        }
+//        if (rentalRequestRepository.existsByPostAndMember(post, member)) {
+//            throw new RentalRequestException(
+//                    RentalRequestErrorCode.RENTAL_REQUEST_ALREADY_EXISTS
+//            );
+//        }
     }
 }

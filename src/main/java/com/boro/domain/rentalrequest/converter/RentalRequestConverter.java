@@ -101,7 +101,7 @@ public class RentalRequestConverter {
                 .build();
     }
 
-    public static RentalRequestResponseDTO.CreatedRentalRequest toCreatedRentalRequest(RentalRequest rentalRequest, ChatRoom chatRoom) {
+    public static RentalRequestResponseDTO.CreatedRentalRequest toCreatedRentalRequest(RentalRequest rentalRequest, ChatRoom chatRoom, boolean exists) {
         return RentalRequestResponseDTO.CreatedRentalRequest.builder()
                 .chatRoomId(chatRoom.getId())
                 .rentalRequestId(rentalRequest.getId())
@@ -110,6 +110,7 @@ public class RentalRequestConverter {
                 .ownerReturned(rentalRequest.isOwnerReturned())
                 .memberId(rentalRequest.getMember().getId())
                 .postId(rentalRequest.getPost().getId())
+                .chatRoomExists(exists)
                 .build();
     }
 

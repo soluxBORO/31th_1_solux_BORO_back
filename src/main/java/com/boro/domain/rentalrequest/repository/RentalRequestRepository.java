@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RentalRequestRepository extends JpaRepository<RentalRequest, Long> {
 
@@ -93,5 +94,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
         ORDER BY rr.updatedAt DESC
     """)
     List<Post> findProvidedPostsByMemberId(@Param("memberId") Long memberId);
+
+    Optional<RentalRequest> findByMemberAndPost(Member member, Post post);
 
 }

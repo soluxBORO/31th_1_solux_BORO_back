@@ -63,7 +63,8 @@ public record RentalRequestResponseDTO() {
             boolean borrowerReturned,
             boolean ownerReturned,
             Long memberId,
-            Long postId
+            Long postId,
+            boolean chatRoomExists
     ){
     }
 
