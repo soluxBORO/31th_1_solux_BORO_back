@@ -13,6 +13,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberInfo(
+            String profileUrl,
             String email,
             String studentNumber,
             String nickname,
