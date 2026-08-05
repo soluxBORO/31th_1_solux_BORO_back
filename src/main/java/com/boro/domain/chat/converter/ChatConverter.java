@@ -32,7 +32,6 @@ public class ChatConverter {
 
     public static ChatRoom toChatRoomTest(ChatRequestDTO.ChatRoomTest request){
         return ChatRoom.builder()
-                .chatRoomName(request.chatRoomName())
                 .chatRoomType(request.chatRoomType())
                 .build();
     }
@@ -114,7 +113,6 @@ public class ChatConverter {
     public static ChatRoomPreview toChatRoomDTO(ChatRoom chatRoom){
         return ChatRoomPreview.builder()
                 .chatRoomId(chatRoom.getId())
-                .chatName(chatRoom.getChatRoomName())
                 // TODO: S3 개발 후, 고도화 필요
                 .profileUrl(null)
                 .lastMessageContent(chatRoom.getLastMessageContent())

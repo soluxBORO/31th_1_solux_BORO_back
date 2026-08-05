@@ -48,6 +48,7 @@ public class EmptySpotConverter {
     public static EmptySpotResponseDTO.EmptySpotInfo toEmptySpotInfo(EmptySpot emptySpot) {
         Post post = emptySpot.getPost();
         return EmptySpotResponseDTO.EmptySpotInfo.builder()
+                .postId(post.getId())
                 .emptySpotId(emptySpot.getId())
                 .status(post.getStatus())
                 .location(emptySpot.getLocation())

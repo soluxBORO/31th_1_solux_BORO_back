@@ -33,6 +33,7 @@ public record EmptySpotResponseDTO() {
 
     @Builder
     public record EmptySpotInfo(
+            Long postId,
             Long emptySpotId,
             PostStatus status,
             String location,
