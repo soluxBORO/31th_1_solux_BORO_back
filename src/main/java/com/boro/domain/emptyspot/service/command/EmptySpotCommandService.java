@@ -13,8 +13,10 @@ import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.repository.PostRepository;
 import com.boro.global.error.code.status.EmptySpotErrorCode;
 import com.boro.global.error.code.status.MemberErrorCode;
+import com.boro.global.error.code.status.PostErrorCode;
 import com.boro.global.error.exception.handler.EmptySpotException;
 import com.boro.global.error.exception.handler.MemberException;
+import com.boro.global.error.exception.handler.PostException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,13 +69,12 @@ public class EmptySpotCommandService {
         );
     }
 
-    public void deleteEmptySpot(Long memberId, Long emptySpotId) {
-        EmptySpot emptySpot = emptySpotRepository.findById(emptySpotId)
-                .orElseThrow(() -> new EmptySpotException(EmptySpotErrorCode.EMPTY_SPOT_NOT_FOUND));
+    public void deleteEmptySpot(Long memberId, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
 
-        Post post = emptySpot.getPost();
         if (!post.getMember().getId().equals(memberId)) {
-            throw new EmptySpotException(EmptySpotErrorCode.NOT_EMPTY_SPOT_OWNER);
+            throw new PostException(PostErrorCode.NOT_POST_OWNER);
         }
 
         post.markAsDeleted();
