@@ -84,7 +84,9 @@ public class RentalRequestCommandService {
             // 빌린 사람이 반납 완료한 경우
             rentalRequest.completeBorrowerReturn();
         } else if (rentalRequest.getMember().getId().equals(memberId)) {
-            // 빌려준 사람이 반납 완료한 경우
+            // 빌려준 사람이 반납 확인한 경우
+            if (!rentalRequest.isBorrowerReturned())
+                throw new RentalRequestException(RentalRequestErrorCode.RENTAL_RETURN_NOT_COMPLETED);
             rentalRequest.completeOwnerReturn();
         } else {
             throw new RentalRequestException(RentalRequestErrorCode.NOT_RENTING);
