@@ -42,6 +42,7 @@ public class EmptySpotConverter {
                 .hasWindowSeat(emptySpot.getHasWindowSeat())
                 .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
                 .createdAt(emptySpot.getCreatedAt())
+                .profileUrl(emptySpot.getPost().getMember().getProfileUrl())
                 .authorNickname(emptySpot.getPost().getMember().getNickname())
                 .build();
     }
@@ -59,6 +60,7 @@ public class EmptySpotConverter {
                 .hasWindowSeat(emptySpot.getHasWindowSeat())
                 .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
                 .createdAt(emptySpot.getCreatedAt())
+                .profileUrl(post.getMember().getProfileUrl())
                 .authorNickname(post.getMember().getNickname())
                 .build();
     }

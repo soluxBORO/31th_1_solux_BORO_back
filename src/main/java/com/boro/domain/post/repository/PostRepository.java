@@ -20,6 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             WHERE p.status <> com.boro.domain.post.entity.enums.PostStatus.DELETED
               AND (:category IS NULL OR p.postCategory = :category)
               AND (:onlyAvailable = false OR p.status = com.boro.domain.post.entity.enums.PostStatus.ACTIVE)
+              AND m.active = true
             ORDER BY p.createdAt DESC
             """)
     List<Post> findItemPostList(@Param("category") PostCategory category, @Param("onlyAvailable") boolean onlyAvailable);
