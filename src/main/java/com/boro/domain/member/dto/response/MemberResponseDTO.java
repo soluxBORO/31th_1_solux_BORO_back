@@ -68,6 +68,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberLikePost(
+            Long postId,
             String postImageUrl,
             PostCategory postCategory,
             PostStatus postStatus,

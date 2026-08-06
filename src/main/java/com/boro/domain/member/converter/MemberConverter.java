@@ -79,6 +79,7 @@ public class MemberConverter {
         Post post = postLike.getPost();
         Item item = post.getItem();
         return MemberResponseDTO.MemberLikePost.builder()
+                .postId(post.getId())
                 .postImageUrl(item.getItemImages().stream().findFirst() .map(ItemImage::getImageUrl).orElse(null))
                 .postCategory(post.getPostCategory())
                 .postStatus(post.getStatus())
