@@ -67,7 +67,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     boolean existsByPostAndMember(Post post, Member member);
 
     @Query("""
-        SELECT rr.post FROM RentalRequest rr
+        SELECT rr FROM RentalRequest rr
         JOIN rr.post p
         WHERE (
             (rr.requestStatus =
@@ -81,10 +81,10 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
         OR rr.member.id = :memberId)
         ORDER BY rr.updatedAt DESC
     """)
-    List<Post> findCompletedPostsByMemberId(@Param("memberId") Long memberId);
+    List<RentalRequest> findCompletedPostsByMemberId(@Param("memberId") Long memberId);
 
     @Query("""
-        SELECT p
+        SELECT rr
         FROM RentalRequest rr
         JOIN rr.post p
         WHERE
@@ -101,7 +101,7 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
         ))
         ORDER BY rr.updatedAt DESC
     """)
-    List<Post> findProvidedPostsByMemberId(@Param("memberId") Long memberId);
+    List<RentalRequest> findProvidedPostsByMemberId(@Param("memberId") Long memberId);
 
     Optional<RentalRequest> findByMemberAndPost(Member member, Post post);
 

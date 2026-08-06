@@ -100,6 +100,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MyRentalHistory(
+            Long rentalRequestId,
             Long postId,
             PostStatus postStatus,
             PostCategory postCategory,

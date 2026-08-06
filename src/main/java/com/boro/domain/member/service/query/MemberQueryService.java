@@ -13,6 +13,7 @@ import com.boro.domain.post.entity.Post;
 import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.repository.PostLikeRepository;
 import com.boro.domain.post.repository.PostRepository;
+import com.boro.domain.rentalrequest.entity.RentalRequest;
 import com.boro.domain.rentalrequest.entity.Review;
 import com.boro.domain.rentalrequest.entity.enums.ReviewSentiment;
 import com.boro.domain.rentalrequest.repository.RentalRequestRepository;
@@ -129,13 +130,13 @@ public class MemberQueryService {
     public List<MemberResponseDTO.MyRentalHistory> getMyRentalHistory(Long memberId, RentalHistoryType rentalHistoryType){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        List<Post> postList;
+        List<RentalRequest> rentalRequestList;
         if (rentalHistoryType == RentalHistoryType.ALL){
-            postList = rentalRequestRepository.findCompletedPostsByMemberId(memberId);
+            rentalRequestList = rentalRequestRepository.findCompletedPostsByMemberId(memberId);
         } else {
-            postList = rentalRequestRepository.findProvidedPostsByMemberId(memberId);
+            rentalRequestList = rentalRequestRepository.findProvidedPostsByMemberId(memberId);
         }
-        return MemberConverter.getMyRentalHistory(postList, member);
+        return MemberConverter.getMyRentalHistory(rentalRequestList, member);
     }
 
 }
