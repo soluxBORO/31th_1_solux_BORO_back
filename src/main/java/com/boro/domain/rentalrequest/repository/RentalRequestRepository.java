@@ -69,8 +69,14 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     @Query("""
         SELECT rr.post FROM RentalRequest rr
         JOIN rr.post p
-        WHERE rr.requestStatus =
-                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED 
+        WHERE (
+            (rr.requestStatus =
+                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED)
+           or (rr.requestStatus =
+                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
+            AND rr.borrowerReturned = true
+            )
+        )
         AND (p.member.id = :memberId
         OR rr.member.id = :memberId)
         ORDER BY rr.updatedAt DESC
@@ -81,21 +87,18 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
         SELECT p
         FROM RentalRequest rr
         JOIN rr.post p
-        WHERE (
+        WHERE
             rr.requestStatus =
                 com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED
-            OR (
-                rr.requestStatus =
-                    com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED                 AND rr.borrowerReturned = true
-        ))AND ((
+             AND ((
             p.postCategory =
                 com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
             AND p.member.id = :memberId
         ) OR (
             p.postCategory <>
                 com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
-            AND rr.member.id = :memberId             )
-        )
+            AND rr.member.id = :memberId
+        ))
         ORDER BY rr.updatedAt DESC
     """)
     List<Post> findProvidedPostsByMemberId(@Param("memberId") Long memberId);
