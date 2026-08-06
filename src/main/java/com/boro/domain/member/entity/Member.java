@@ -68,4 +68,14 @@ public class Member extends BaseEntity {
         pointHistoryList.add(pointHistory);
         pointHistory.setMember(this);
     }
+
+    public void withdraw(){
+        this.active = false;
+
+        this.email = "withdrawn_" + id + "@deleted.local";
+        this.nickname = "탈퇴한 사용자";
+        this.phoneNumber = null;
+        this.profileUrl = null;
+
+    }
 }
