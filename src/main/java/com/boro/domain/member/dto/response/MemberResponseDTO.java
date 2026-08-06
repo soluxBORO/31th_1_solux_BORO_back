@@ -16,6 +16,7 @@ public record MemberResponseDTO() {
             String profileUrl,
             String email,
             String studentNumber,
+            String name,
             String nickname,
             Integer point
     ){}
@@ -67,6 +68,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberLikePost(
+            Long postId,
             String postImageUrl,
             PostCategory postCategory,
             PostStatus postStatus,

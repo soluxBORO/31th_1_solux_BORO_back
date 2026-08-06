@@ -69,8 +69,14 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     @Query("""
         SELECT rr.post FROM RentalRequest rr
         JOIN rr.post p
-        WHERE rr.requestStatus =
-                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED 
+        WHERE (
+            (rr.requestStatus =
+                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED)
+           or (rr.requestStatus =
+                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.APPROVED
+            AND rr.borrowerReturned = true
+            )
+        )
         AND (p.member.id = :memberId
         OR rr.member.id = :memberId)
         ORDER BY rr.updatedAt DESC
@@ -78,19 +84,21 @@ public interface RentalRequestRepository extends JpaRepository<RentalRequest, Lo
     List<Post> findCompletedPostsByMemberId(@Param("memberId") Long memberId);
 
     @Query("""
-        SELECT rr.post FROM RentalRequest rr
+        SELECT p
+        FROM RentalRequest rr
         JOIN rr.post p
-        WHERE rr.requestStatus =
-                  com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED
-          AND ((
-                p.postCategory =
-                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
-                and p.member.id = :memberId
-            ) or (
-                p.postCategory <>
-                    com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
-                and rr.member.id = :memberId
-            ))
+        WHERE
+            rr.requestStatus =
+                com.boro.domain.rentalrequest.entity.enums.RentalRequestStatus.COMPLETED
+             AND ((
+            p.postCategory =
+                com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+            AND p.member.id = :memberId
+        ) OR (
+            p.postCategory <>
+                com.boro.domain.post.entity.enums.PostCategory.EMPTY_SPOTS
+            AND rr.member.id = :memberId
+        ))
         ORDER BY rr.updatedAt DESC
     """)
     List<Post> findProvidedPostsByMemberId(@Param("memberId") Long memberId);
