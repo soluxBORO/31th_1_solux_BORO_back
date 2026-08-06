@@ -23,6 +23,8 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    private String name;
+
     private String email;
 
     private String studentNumber;
@@ -50,6 +52,7 @@ public class Member extends BaseEntity {
     public void changeMemberInfo(MemberRequestDTO.ChangeMemberInfo request){
         this.nickname = request.nickname();
         this.phoneNumber = request.phoneNumber();
+        this.profileUrl = request.profileUrl();
     }
 
     public void applyPoint(int point) {

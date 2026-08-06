@@ -16,6 +16,7 @@ public record MemberResponseDTO() {
             String profileUrl,
             String email,
             String studentNumber,
+            String name,
             String nickname,
             Integer point
     ){}

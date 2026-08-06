@@ -8,6 +8,8 @@ public record AuthRequestDTO() {
             @NotBlank
             String signUpToken,
             @NotBlank
+            String name,
+            @NotBlank
             String nickname,
             @NotBlank
             String studentNumber

@@ -20,6 +20,7 @@ public class MemberConverter {
                 .profileUrl(member.getProfileUrl())
                 .email(member.getEmail())
                 .studentNumber(member.getStudentNumber())
+                .name(member.getName())
                 .nickname(member.getNickname())
                 .point(member.getPoint())
                 .build();
