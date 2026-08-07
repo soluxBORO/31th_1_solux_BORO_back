@@ -14,15 +14,21 @@ import com.boro.domain.chat.repository.ChatRoomRepository;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.member.repository.MemberRepository;
 import com.boro.domain.post.entity.Post;
+import com.boro.domain.post.entity.enums.PostCategory;
 import com.boro.domain.post.repository.PostRepository;
+import com.boro.domain.rentalrequest.converter.RentalRequestConverter;
 import com.boro.domain.rentalrequest.dto.response.RentalRequestResponseDTO;
+import com.boro.domain.rentalrequest.entity.RentalRequest;
+import com.boro.domain.rentalrequest.repository.RentalRequestRepository;
 import com.boro.domain.rentalrequest.service.command.RentalRequestCommandService;
 import com.boro.global.error.code.status.ChatErrorCode;
 import com.boro.global.error.code.status.MemberErrorCode;
 import com.boro.global.error.code.status.PostErrorCode;
+import com.boro.global.error.code.status.RentalRequestErrorCode;
 import com.boro.global.error.exception.handler.ChatException;
 import com.boro.global.error.exception.handler.MemberException;
 import com.boro.global.error.exception.handler.PostException;
+import com.boro.global.error.exception.handler.RentalRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -39,6 +45,7 @@ public class ChatCommandService {
     private final ChatMessageRepository chatMessageRepository;
     private final MemberRepository memberRepository;
     private final RentalRequestCommandService rentalRequestCommandService;
+    private final RentalRequestRepository rentalRequestRepository;
     private final PostRepository postRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -51,13 +58,19 @@ public class ChatCommandService {
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND));
         Member owner = memberRepository.findById(post.getMember().getId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        boolean exists = rentalRequestCommandService.existsRentalRequest(member, post);
+        if (exists){
+            RentalRequest rentalRequest = rentalRequestRepository.findByMemberAndPost(member, post)
+                        .orElseThrow(() -> new RentalRequestException(RentalRequestErrorCode.RENTAL_REQUEST_NOT_FOUND));
+            return RentalRequestConverter.toCreatedRentalRequest(rentalRequest, rentalRequest.getChatRoom(), exists);
+        }
         ChatRoom chatRoom = ChatConverter.toChatRoom(post.getPostCategory());
 
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, member));
         chatRoom.addChatMember(ChatConverter.toChatMember(chatRoom, owner));
 
         chatRoomRepository.save(chatRoom);
-        return rentalRequestCommandService.createRentalRequest(chatRoom, post, member);
+        return rentalRequestCommandService.createRentalRequest(chatRoom, post, member, exists);
     }
 
     public void saveChatRoomTest(Long memberId, ChatRequestDTO.ChatRoomTest request){

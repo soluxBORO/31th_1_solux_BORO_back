@@ -7,6 +7,7 @@ import com.boro.domain.member.entity.MemberAsset;
 import com.boro.domain.member.entity.PointHistory;
 import com.boro.domain.post.entity.*;
 import com.boro.domain.post.entity.enums.PostCategory;
+import com.boro.domain.rentalrequest.entity.RentalRequest;
 import com.boro.domain.rentalrequest.entity.Review;
 
 import java.time.Duration;
@@ -17,8 +18,10 @@ public class MemberConverter {
 
     public static MemberResponseDTO.MemberInfo toMemberInfo(Member member){
         return MemberResponseDTO.MemberInfo.builder()
+                .profileUrl(member.getProfileUrl())
                 .email(member.getEmail())
                 .studentNumber(member.getStudentNumber())
+                .name(member.getName())
                 .nickname(member.getNickname())
                 .point(member.getPoint())
                 .build();
@@ -77,6 +80,7 @@ public class MemberConverter {
         Post post = postLike.getPost();
         Item item = post.getItem();
         return MemberResponseDTO.MemberLikePost.builder()
+                .postId(post.getId())
                 .postImageUrl(item.getItemImages().stream().findFirst() .map(ItemImage::getImageUrl).orElse(null))
                 .postCategory(post.getPostCategory())
                 .postStatus(post.getStatus())
@@ -84,6 +88,7 @@ public class MemberConverter {
                 .postDescription(item.getDescription())
                 .requestCreatedAt(post.getCreatedAt().toLocalDate())
                 .profileImageUrl(post.getMember().getProfileUrl())
+                .postMemberNickname(post.getMember().getNickname())
                 .price(item.getRentalPrice())
                 .priceUnit(item.getRentalPriceUnit())
                 .likeCount(post.getPostLikeList().size())
@@ -122,20 +127,22 @@ public class MemberConverter {
                 .build();
     }
 
-    public static List<MemberResponseDTO.MyRentalHistory> getMyRentalHistory(List<Post> postList, Member member){
-        return postList.stream()
-                .map(post -> {
-                    if (post.getPostCategory() == PostCategory.EMPTY_SPOTS) {
-                        return toRentalEmptySpotHistory(post);
+    public static List<MemberResponseDTO.MyRentalHistory> getMyRentalHistory(List<RentalRequest> rentalRequestList, Member member){
+        return rentalRequestList.stream()
+                .map(rentalRequest -> {
+                    if (rentalRequest.getPost().getPostCategory() == PostCategory.EMPTY_SPOTS) {
+                        return toRentalEmptySpotHistory(rentalRequest);
                     } else {
-                        return toRentalItemHistory(post, member);
+                        return toRentalItemHistory(rentalRequest, member);
                     }
                 }).toList();
     }
 
-    public static MemberResponseDTO.MyRentalHistory toRentalItemHistory(Post post, Member member){
+    public static MemberResponseDTO.MyRentalHistory toRentalItemHistory(RentalRequest rentalRequest, Member member){
+        Post post = rentalRequest.getPost();
         Item item = post.getItem();
         return MemberResponseDTO.MyRentalHistory.builder()
+                .rentalRequestId(rentalRequest.getId())
                 .postId(post.getId())
                 .postStatus(post.getStatus())
                 .postCategory(post.getPostCategory())
@@ -149,9 +156,11 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.MyRentalHistory toRentalEmptySpotHistory(Post post){
+    public static MemberResponseDTO.MyRentalHistory toRentalEmptySpotHistory(RentalRequest rentalRequest){
+        Post post = rentalRequest.getPost();
         EmptySpot emptySpot = post.getEmptySpot();
         return MemberResponseDTO.MyRentalHistory.builder()
+                .rentalRequestId(rentalRequest.getId())
                 .postId(post.getId())
                 .postStatus(post.getStatus())
                 .postCategory(post.getPostCategory())

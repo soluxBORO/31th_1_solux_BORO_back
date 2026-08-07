@@ -1,5 +1,6 @@
 package com.boro.domain.rentalrequest.converter;
 
+import com.boro.domain.chat.entity.ChatRoom;
 import com.boro.domain.member.entity.Member;
 import com.boro.domain.post.entity.EmptySpot;
 import com.boro.domain.post.entity.Item;
@@ -100,14 +101,16 @@ public class RentalRequestConverter {
                 .build();
     }
 
-    public static RentalRequestResponseDTO.CreatedRentalRequest toCreatedRentalRequest(RentalRequest rentalRequest) {
+    public static RentalRequestResponseDTO.CreatedRentalRequest toCreatedRentalRequest(RentalRequest rentalRequest, ChatRoom chatRoom, boolean exists) {
         return RentalRequestResponseDTO.CreatedRentalRequest.builder()
+                .chatRoomId(chatRoom.getId())
                 .rentalRequestId(rentalRequest.getId())
                 .requestStatus(rentalRequest.getRequestStatus())
                 .borrowerReturned(rentalRequest.isBorrowerReturned())
                 .ownerReturned(rentalRequest.isOwnerReturned())
                 .memberId(rentalRequest.getMember().getId())
                 .postId(rentalRequest.getPost().getId())
+                .chatRoomExists(exists)
                 .build();
     }
 

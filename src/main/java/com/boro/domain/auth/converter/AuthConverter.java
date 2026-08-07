@@ -29,6 +29,7 @@ public class AuthConverter {
         return Member.builder()
                 .nickname(request.nickname())
                 .studentNumber(request.studentNumber())
+                .name(payload.name())
                 .email(payload.email())
                 .build();
     }

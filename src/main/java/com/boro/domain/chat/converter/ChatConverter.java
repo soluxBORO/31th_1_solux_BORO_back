@@ -32,7 +32,6 @@ public class ChatConverter {
 
     public static ChatRoom toChatRoomTest(ChatRequestDTO.ChatRoomTest request){
         return ChatRoom.builder()
-                .chatRoomName(request.chatRoomName())
                 .chatRoomType(request.chatRoomType())
                 .build();
     }
@@ -101,6 +100,7 @@ public class ChatConverter {
         }
 
         return ChatResponseDTO.ChatMessageList.builder()
+                .chatRoomId(chatRoom.getId())
                 .chatRoomName(opponent.getNickname())
                 // TODO: 대여 요청 엔티티와 연결 필요
                 .postName(postName)
@@ -113,7 +113,6 @@ public class ChatConverter {
     public static ChatRoomPreview toChatRoomDTO(ChatRoom chatRoom){
         return ChatRoomPreview.builder()
                 .chatRoomId(chatRoom.getId())
-                .chatName(chatRoom.getChatRoomName())
                 // TODO: S3 개발 후, 고도화 필요
                 .profileUrl(null)
                 .lastMessageContent(chatRoom.getLastMessageContent())
@@ -153,13 +152,12 @@ public class ChatConverter {
     }
 
     public static ChatResponseDTO.ChatMessageSentEvent toChatMessageSentEvent(
-            ChatMessage chatMessage, Long receiverId
+            ChatMessage chatMessage, Long memberId
     ){
         return ChatResponseDTO.ChatMessageSentEvent.builder()
                 .chatRoomId(chatMessage.getChatRoom().getId())
                 .messageId(chatMessage.getId())
-                .senderId(chatMessage.getMember().getId())
-                .receiverId(receiverId)
+                .senderId(memberId)
                 .content(chatMessage.getContent())
                 .createdAt(chatMessage.getCreatedAt())
                 .build();

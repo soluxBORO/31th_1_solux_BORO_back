@@ -19,13 +19,23 @@ public class RedisPublisher {
      *  채팅방 실시간 메시지 발행
      */
     public void publishChatMessage(ChatResponseDTO.ChatMessage message) {
-        redisTemplate.convertAndSend(CHAT_MESSAGE_TOPIC_PREFIX + message.roomId(), message);
+        Long subscriberCount = redisTemplate.convertAndSend(CHAT_MESSAGE_TOPIC_PREFIX + message.roomId(), message);
+        log.info(
+                "Redis publish topic={}, subscriberCount={}",
+                CHAT_MESSAGE_TOPIC_PREFIX + message.roomId(),
+                subscriberCount
+        );
     }
 
     /**
      * 사용자별 채팅방 목록 업데이트 발행
      */
     public void publishChatRoomUpdate(ChatResponseDTO.ChatRoomUpdate request){
-        redisTemplate.convertAndSend(CHAT_ROOM_UPDATE_TOPIC_PREFIX+ request.memberId(), request);
+        Long subscriberCount = redisTemplate.convertAndSend(CHAT_ROOM_UPDATE_TOPIC_PREFIX + request.memberId(), request);
+        log.info(
+                "Redis publish topic={}, subscriberCount={}",
+                CHAT_ROOM_UPDATE_TOPIC_PREFIX + request.memberId(),
+                subscriberCount
+        );
     }
 }

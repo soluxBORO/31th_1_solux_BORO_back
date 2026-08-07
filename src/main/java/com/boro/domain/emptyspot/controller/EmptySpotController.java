@@ -54,12 +54,12 @@ public class EmptySpotController {
     }
 
     @Operation(summary = "빈자리 게시글 삭제 API", description = "빈자리 양도 게시글을 삭제하는 API")
-    @DeleteMapping("/{emptySpotId}")
+    @DeleteMapping("/{postId}")
     public ApiResponse<Void> deleteEmptySpot(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable Long emptySpotId
+            @PathVariable Long postId
     ) {
-        emptySpotCommandService.deleteEmptySpot(customUserDetails.getMemberId(), emptySpotId);
+        emptySpotCommandService.deleteEmptySpot(customUserDetails.getMemberId(), postId);
         return ApiResponse.onSuccess(null);
     }
 

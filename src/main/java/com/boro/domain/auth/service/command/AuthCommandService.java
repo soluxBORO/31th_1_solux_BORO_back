@@ -49,6 +49,7 @@ public class AuthCommandService {
     public OAuth2ResponseDTO.Login loginWithOAuth(HttpServletRequest request, HttpServletResponse response,
                                                   String code) {
         OAuth2ResponseDTO.GetUserInfo userInfo = googleUserLoader.loadUser(code);
+        log.info("Name: {}", userInfo.name());
         Optional<Social> socialOptional = socialRepository.findBySocialTypeAndProviderId(
                         SocialType.GOOGLE, userInfo.providerId()
         );
@@ -126,10 +127,19 @@ public class AuthCommandService {
         return AuthConverter.toNicknameCheck(nickname, exists);
     }
 
-    public void withdraw(Long memberId){
+    public void withdraw(HttpServletRequest request, Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        memberRepository.delete(member);
+
+        String refreshToken = redisStorageQueryService.getRefreshToken(memberId);
+        String accessToken = JwtUtil.resolveToken(request);
+        // 리프레쉬, 액세스 토큰 그냥 싹다 안 됨 처리 - 블랙 리스트 추가, refresh에서 삭제
+        redisStorageCommandService.deleteRefreshToken(memberId);
+        redisStorageCommandService.addBlackList(refreshToken);
+        redisStorageCommandService.addBlackList(accessToken);
+
+        socialRepository.deleteByMember(member);
+        member.withdraw();
     }
 
     private void validateSignUp(String email){

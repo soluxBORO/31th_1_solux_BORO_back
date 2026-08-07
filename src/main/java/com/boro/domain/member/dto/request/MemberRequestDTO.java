@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record MemberRequestDTO() {
 
     public record ChangeMemberInfo(
+        String profileUrl,
         String nickname,
         String phoneNumber
     ){}

@@ -30,6 +30,7 @@ public class ChatResponseDTO {
 
     @Builder
     public record ChatMessageList(
+            Long chatRoomId,
             String chatRoomName,
             String postName,
             String profileUrl,
@@ -57,7 +58,6 @@ public class ChatResponseDTO {
             Long chatRoomId,
             Long messageId,
             Long senderId,
-            Long receiverId,
             String content,
             LocalDateTime createdAt
     ){}

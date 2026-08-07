@@ -11,6 +11,8 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -28,7 +30,7 @@ public class StompHandler implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         handleMessage(accessor.getCommand(), accessor);
         return message;
     }
@@ -38,10 +40,18 @@ public class StompHandler implements ChannelInterceptor {
         log.info("STOMP Command = {}", accessor.getCommand());
         switch (stompCommand) {
             case CONNECT:
-                accessor.setLeaveMutable(true);
+                log.info("===== CONNECT 요청 수신 =====");
                 String token = extractToken(accessor);
-                Long memberId = Long.parseLong(jwtProvider.getAuthentication(token).getName());
+                Authentication authentication = jwtProvider.getAuthentication(token);
+                Long memberId = Long.parseLong(authentication.getName());
+                accessor.setUser(authentication);
                 accessor.getSessionAttributes().put(AUTHENTICATED_MEMBER_ID, memberId);
+                accessor.setLeaveMutable(true);
+                log.info(
+                        "STOMP 인증 완료: memberId={}, principal={}",
+                        memberId,
+                        accessor.getUser().getName()
+                );
                 break;
             case SUBSCRIBE:
                 log.info("===== SUBSCRIBE 요청 수신 =====");
@@ -82,6 +92,7 @@ public class StompHandler implements ChannelInterceptor {
             throw new IllegalStateException("웹소켓 인증 회원 정보가 없습니다.");
         }
         chatRoomViewerService.enterRoom(roomId, memberId);
+        log.info("entered: memberId, roomId: {}, {}", memberId, roomId);
         accessor.getSessionAttributes().put(SESSION_ROOM_ID, roomId);
     }
 
@@ -94,6 +105,7 @@ public class StompHandler implements ChannelInterceptor {
     }
 
     private void removeViewer(StompHeaderAccessor accessor){
+        log.info("== removeViewer ==");
         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
         if (sessionAttributes == null) return;
 
@@ -103,6 +115,7 @@ public class StompHandler implements ChannelInterceptor {
         if (roomId == null || memberId == null) return;
 
         chatRoomViewerService.leaveRoom(roomId, memberId);
+        log.info("leaved: memberId, roomId: {}, {}", memberId, roomId);
         sessionAttributes.remove(SESSION_ROOM_ID);
     }
 

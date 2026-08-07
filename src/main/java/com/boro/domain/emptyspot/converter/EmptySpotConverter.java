@@ -33,6 +33,7 @@ public class EmptySpotConverter {
 
     public static EmptySpotResponseDTO.EmptySpotSummary toEmptySpotSummary(EmptySpot emptySpot) {
         return EmptySpotResponseDTO.EmptySpotSummary.builder()
+                .postId(emptySpot.getPost().getId())
                 .emptySpotId(emptySpot.getId())
                 .location(emptySpot.getLocation())
                 .floor(emptySpot.getFloor())
@@ -41,6 +42,7 @@ public class EmptySpotConverter {
                 .hasWindowSeat(emptySpot.getHasWindowSeat())
                 .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
                 .createdAt(emptySpot.getCreatedAt())
+                .profileUrl(emptySpot.getPost().getMember().getProfileUrl())
                 .authorNickname(emptySpot.getPost().getMember().getNickname())
                 .build();
     }
@@ -48,6 +50,7 @@ public class EmptySpotConverter {
     public static EmptySpotResponseDTO.EmptySpotInfo toEmptySpotInfo(EmptySpot emptySpot) {
         Post post = emptySpot.getPost();
         return EmptySpotResponseDTO.EmptySpotInfo.builder()
+                .postId(post.getId())
                 .emptySpotId(emptySpot.getId())
                 .status(post.getStatus())
                 .location(emptySpot.getLocation())
@@ -57,6 +60,7 @@ public class EmptySpotConverter {
                 .hasWindowSeat(emptySpot.getHasWindowSeat())
                 .expectedCheckoutTime(emptySpot.getExpectedCheckoutTime())
                 .createdAt(emptySpot.getCreatedAt())
+                .profileUrl(post.getMember().getProfileUrl())
                 .authorNickname(post.getMember().getNickname())
                 .build();
     }

@@ -68,7 +68,7 @@ jobs:
           # `docker login` on EC2 just long enough to pull the new image. No
           # long-lived PAT is stored on the instance (see report for rationale).
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SPRING_PROFILES_ACTIVE: local
+          SPRING_PROFILES_ACTIVE: develop
           LOCAL_DB_URL: ${{ secrets.LOCAL_DB_URL }}
           LOCAL_DB_USERNAME: ${{ secrets.LOCAL_DB_USERNAME }}
           LOCAL_DB_PASSWORD: ${{ secrets.LOCAL_DB_PASSWORD }}

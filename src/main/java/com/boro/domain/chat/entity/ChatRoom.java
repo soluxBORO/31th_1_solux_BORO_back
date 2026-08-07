@@ -24,8 +24,6 @@ public class ChatRoom extends BaseEntity {
     @Column(name = "chat_room_id")
     private Long id;
 
-    private String chatRoomName;
-
     @Enumerated(EnumType.STRING)
     private ChatRoomType chatRoomType;
 

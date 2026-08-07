@@ -57,12 +57,14 @@ public record RentalRequestResponseDTO() {
 
     @Builder
     public record CreatedRentalRequest(
+            Long chatRoomId,
             Long rentalRequestId,
             RentalRequestStatus requestStatus,
             boolean borrowerReturned,
             boolean ownerReturned,
             Long memberId,
-            Long postId
+            Long postId,
+            boolean chatRoomExists
     ){
     }
 

@@ -23,6 +23,8 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    private String name;
+
     private String email;
 
     private String studentNumber;
@@ -50,6 +52,7 @@ public class Member extends BaseEntity {
     public void changeMemberInfo(MemberRequestDTO.ChangeMemberInfo request){
         this.nickname = request.nickname();
         this.phoneNumber = request.phoneNumber();
+        this.profileUrl = request.profileUrl();
     }
 
     public void applyPoint(int point) {
@@ -64,5 +67,15 @@ public class Member extends BaseEntity {
     public void addPointHistory(PointHistory pointHistory){
         pointHistoryList.add(pointHistory);
         pointHistory.setMember(this);
+    }
+
+    public void withdraw(){
+        this.active = false;
+
+        this.email = "withdrawn_" + id + "@deleted.local";
+        this.nickname = "탈퇴한 사용자";
+        this.phoneNumber = null;
+        this.profileUrl = null;
+
     }
 }

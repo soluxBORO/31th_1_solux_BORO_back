@@ -13,8 +13,10 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberInfo(
+            String profileUrl,
             String email,
             String studentNumber,
+            String name,
             String nickname,
             Integer point
     ){}
@@ -66,6 +68,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MemberLikePost(
+            Long postId,
             String postImageUrl,
             PostCategory postCategory,
             PostStatus postStatus,
@@ -97,6 +100,7 @@ public record MemberResponseDTO() {
 
     @Builder
     public record MyRentalHistory(
+            Long rentalRequestId,
             Long postId,
             PostStatus postStatus,
             PostCategory postCategory,
