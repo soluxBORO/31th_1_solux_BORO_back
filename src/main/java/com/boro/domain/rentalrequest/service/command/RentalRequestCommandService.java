@@ -104,13 +104,21 @@ public class RentalRequestCommandService {
             throw new RentalRequestException(RentalRequestErrorCode.REVIEW_NOT_ALLOWED_FOR_UNAPPROVED_RENTAL);
         }
 
+        Member postWriter = rentalRequest.getPost().getMember();
+        Member requester = rentalRequest.getMember();
+        boolean isEmptySpots =
+                rentalRequest.getPost().getPostCategory() == PostCategory.EMPTY_SPOTS;
+
+        Member borrower = isEmptySpots ? requester : postWriter;
+        Member lender = isEmptySpots ? postWriter : requester;
+
         Member receiver;
-        if (writer.getId().equals(rentalRequest.getPost().getMember().getId())) {
+        if (writer.getId().equals(borrower.getId())) {
             // 내가 빌리는 사람
-            receiver = rentalRequest.getMember();
-        } else if (writer.getId().equals(rentalRequest.getMember().getId())) {
+            receiver = lender;
+        } else if (writer.getId().equals(lender.getId())) {
             // 내가 빌려준 사람
-            receiver = rentalRequest.getPost().getMember();
+            receiver = borrower;
         } else {
             throw new RentalRequestException(RentalRequestErrorCode.NOT_RENTAL_PARTICIPANT);
         }
