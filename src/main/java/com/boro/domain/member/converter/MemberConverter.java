@@ -149,10 +149,7 @@ public class MemberConverter {
     public static MemberResponseDTO.MyRentalHistory toRentalItemHistory(RentalRequest rentalRequest, Member member){
         Post post = rentalRequest.getPost();
         Item item = post.getItem();
-
-        //        if ()
-//        if (member.getId().equals())
-
+        String opponentNickname = getOpponentNickname(member, post, rentalRequest);
 
         return MemberResponseDTO.MyRentalHistory.builder()
                 .rentalRequestId(rentalRequest.getId())
@@ -166,15 +163,15 @@ public class MemberConverter {
                 .postDescription(item.getDescription())
                 .rentalStartTime(item.getRentalStartTime())
                 .rentalEndTime(item.getRentalEndTime())
+                .opponentNickname(opponentNickname)
                 .build();
     }
 
     public static MemberResponseDTO.MyRentalHistory toRentalEmptySpotHistory(RentalRequest rentalRequest, Member member){
-
-
-
         Post post = rentalRequest.getPost();
         EmptySpot emptySpot = post.getEmptySpot();
+        String opponentNickname = getOpponentNickname(member, post, rentalRequest);
+
         return MemberResponseDTO.MyRentalHistory.builder()
                 .rentalRequestId(rentalRequest.getId())
                 .postId(post.getId())
@@ -185,6 +182,16 @@ public class MemberConverter {
                 .location(emptySpot.getLocation())
                 .floor(emptySpot.getFloor())
                 .seatNumber(emptySpot.getSeatNumber())
+                .opponentNickname(opponentNickname)
                 .build();
+    }
+
+    private static String getOpponentNickname(Member member, Post post, RentalRequest rentalRequest){
+        String opponentNickname;
+        if (member.getId().equals(post.getMember().getId())){
+            return opponentNickname = rentalRequest.getMember().getNickname();
+        } else {
+            return opponentNickname = post.getMember().getNickname();
+        }
     }
 }
