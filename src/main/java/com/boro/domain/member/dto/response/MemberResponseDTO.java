@@ -113,6 +113,7 @@ public record MemberResponseDTO() {
             LocalDate rentalEndTime,
             String location,
             Integer floor,
-            Integer seatNumber
+            Integer seatNumber,
+            String opponentNickname
     ){}
 }
