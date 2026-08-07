@@ -59,9 +59,9 @@ public class MemberController {
     }
 
     @Operation(summary = "탈퇴 API", description = "탈퇴하는 API")
-    @DeleteMapping("/withdraw")
-    public ApiResponse<Void> withdraw(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        authCommandService.withdraw(customUserDetails.getMemberId());
+    @PatchMapping("/withdraw")
+    public ApiResponse<Void> withdraw(HttpServletRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        authCommandService.withdraw(request, customUserDetails.getMemberId());
         return ApiResponse.onSuccess(null);
     }
 

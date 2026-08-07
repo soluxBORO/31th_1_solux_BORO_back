@@ -29,6 +29,7 @@ public record EmptySpotResponseDTO() {
             Boolean hasWindowSeat,
             LocalDateTime expectedCheckoutTime,
             LocalDateTime createdAt,
+            String profileUrl,
             String authorNickname
     ) {}
 
@@ -44,6 +45,7 @@ public record EmptySpotResponseDTO() {
             Boolean hasWindowSeat,
             LocalDateTime expectedCheckoutTime,
             LocalDateTime createdAt,
+            String profileUrl,
             String authorNickname
     ) {}
 }
