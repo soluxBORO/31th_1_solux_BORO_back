@@ -57,10 +57,18 @@ public class MemberConverter {
     }
 
     public static MemberResponseDTO.ReviewDetail toReviewDetail(Member member, Review review){
+        Post post = review.getRentalRequest().getPost();
+        String postTitle = null;
+        if (post.getPostCategory()== PostCategory.EMPTY_SPOTS){
+            postTitle = post.getEmptySpot().getLocation();
+        } else {
+            postTitle = post.getItem().getTitle();
+        }
+
         return MemberResponseDTO.ReviewDetail.builder()
                 .memberId(member.getId())
                 .memberNickname(member.getNickname())
-                .postTitle(review.getRentalRequest().getPost().getItem().getTitle())
+                .postTitle(postTitle)
                 .createdAt(review.getCreatedAt().toLocalDate())
                 .content(review.getContent())
                 .build();
@@ -131,7 +139,7 @@ public class MemberConverter {
         return rentalRequestList.stream()
                 .map(rentalRequest -> {
                     if (rentalRequest.getPost().getPostCategory() == PostCategory.EMPTY_SPOTS) {
-                        return toRentalEmptySpotHistory(rentalRequest);
+                        return toRentalEmptySpotHistory(rentalRequest, member);
                     } else {
                         return toRentalItemHistory(rentalRequest, member);
                     }
@@ -141,6 +149,11 @@ public class MemberConverter {
     public static MemberResponseDTO.MyRentalHistory toRentalItemHistory(RentalRequest rentalRequest, Member member){
         Post post = rentalRequest.getPost();
         Item item = post.getItem();
+
+        //        if ()
+//        if (member.getId().equals())
+
+
         return MemberResponseDTO.MyRentalHistory.builder()
                 .rentalRequestId(rentalRequest.getId())
                 .postId(post.getId())
@@ -156,7 +169,10 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.MyRentalHistory toRentalEmptySpotHistory(RentalRequest rentalRequest){
+    public static MemberResponseDTO.MyRentalHistory toRentalEmptySpotHistory(RentalRequest rentalRequest, Member member){
+
+
+
         Post post = rentalRequest.getPost();
         EmptySpot emptySpot = post.getEmptySpot();
         return MemberResponseDTO.MyRentalHistory.builder()
