@@ -43,6 +43,7 @@ cors:
     - http://localhost:5174
     - https://api.boro-app.com
     - https://boro-app.com
+    - https://31th-1-solux-boro-front-three.vercel.app
 
   methods:
     - GET
